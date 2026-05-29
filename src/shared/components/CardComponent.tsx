@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Image, ImageSourcePropType} from 'react-native';
-import ButtonComponent from '../../../shared/components/ButtonComponent';
+import ButtonComponent from './ButtonComponent';
 import {Dish} from '@/types/domain';
 
 interface CardComponentProps {

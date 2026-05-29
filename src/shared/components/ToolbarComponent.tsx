@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TextInput, SafeAreaView} from 'react-native';
 import {Search} from 'lucide-react-native';
-import NotificationBellComponent from './NotificationBellComponent';
+import NotificationBellComponent from '../../features/menu/components/NotificationBellComponent';
 
 interface ToolbarProps {
     searchValue: string;
@@ -10,7 +10,7 @@ interface ToolbarProps {
     onBellPress: () => void;
 }
 
-export default function Toolbar({searchValue, onChangeSearch, notificationCount, onBellPress}: Readonly<ToolbarProps>) {
+export default function ToolbarComponent({searchValue, onChangeSearch, notificationCount, onBellPress}: Readonly<ToolbarProps>) {
     return (
         <SafeAreaView className="bg-stone-50 border-b border-stone-200 shadow-sm">
             <View className="flex-row items-center justify-between px-4 py-3 gap-3">

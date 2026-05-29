@@ -1,1 +1,1 @@
-export { default as MenuScreen } from './components/MenuScreen';
+export { default as MenuScreen } from './screen/MenuScreen';

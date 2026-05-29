@@ -1,11 +1,6 @@
-import React, {useState} from 'react';
-import {View, Alert, ScrollView} from 'react-native';
-import Toolbar from './Toolbar';
-import CardComponent from './CardComponent';
-import CarouselComponent from './CarouselComponent';
-import {Dish} from '@/types/domain';
+import {Dish} from "@/types/domain";
 
-const menuData: Dish[] = [
+export const menuData: Dish[] = [
     {
         id: '1',
         title: 'Pizza Margherita',
@@ -49,37 +44,3 @@ const menuData: Dish[] = [
         price: 7.50,
     },
 ];
-
-export default function MenuScreen() {
-    const [search, setSearch] = useState('');
-    const [notifications, setNotifications] = useState(3);
-
-    return (
-        <View className="flex-1 bg-stone-100">
-            <Toolbar
-                searchValue={search}
-                onChangeSearch={setSearch}
-                notificationCount={notifications}
-                onBellPress={() => {
-                    Alert.alert('Notificaciones', 'Abriendo panel de estado de tus pedidos...');
-                    setNotifications(0);
-                }}
-            />
-            <CarouselComponent title="Menú de comidas" data={menuData}/>
-            <View style={{flex: 1}}>
-                <ScrollView
-                    style={{flex: 1}}
-                    contentContainerStyle={{paddingHorizontal: 16, paddingTop: 16, paddingBottom: 32}}
-                    showsVerticalScrollIndicator={false}
-                >
-                    <View className="w-full items-center gap-4">
-                        {menuData.map((dish) => (
-                            <CardComponent key={dish.id} dish={dish} hideDescription={false}/>
-                        ))}
-                    </View>
-                </ScrollView>
-            </View>
-        </View>
-    );
-}
-

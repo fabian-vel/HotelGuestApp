@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, Alert, SafeAreaView } from 'react-native';
-import LoginForm from './LoginForm';
+import LoginForm from '../components/LoginForm';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../types/navigation';
+import { RootStackParamList } from '@/types/navigation';
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
