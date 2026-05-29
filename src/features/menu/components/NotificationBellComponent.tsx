@@ -11,7 +11,7 @@ export default function NotificationBellComponent({count = 0, onPress}: Readonly
     return (
         <TouchableOpacity onPress={onPress} activeOpacity={0.7}
                           className="relative p-2 rounded-full active:bg-stone-200">
-            <Bell size={24} color="#1c1917" strokeWidth={2}/>
+            <Bell size={24} color="#ffffff" strokeWidth={2}/>
             {count > 0 && (
                 <View
                     className="absolute right-1 top-1 bg-red-500 min-w-[18px] h-[18px] rounded-full items-center justify-center px-1 border border-stone-100">

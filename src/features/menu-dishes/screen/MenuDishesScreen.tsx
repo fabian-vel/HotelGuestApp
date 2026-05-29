@@ -1,12 +1,22 @@
 import React, {useState} from 'react';
-import {Alert, SafeAreaView, View} from "react-native";
+import {Alert, Text, SafeAreaView, View} from "react-native";
 import ToolbarComponent from "@/shared/components/ToolbarComponent";
 import MenuDishesComponent from "@/features/menu-dishes/components/MenuDishesComponent";
 import {menuData} from "@/features/menu/screen/data";
+import {StackNavigationProp} from "@react-navigation/stack";
+import {RootStackParamList} from "@/types/navigation";
+import {useNavigation} from "@react-navigation/native";
 
-export default function MenuDishesScreen(props: any) {
+type menuDishesNavigationProp = StackNavigationProp<RootStackParamList, 'MenuDishes'>;
+
+export default function MenuDishesScreen() {
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(5);
+    const navigation = useNavigation<menuDishesNavigationProp>();
+
+    const handOnBackPress = () => {
+        navigation.replace('Menu');
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-stone-100">
@@ -19,9 +29,16 @@ export default function MenuDishesScreen(props: any) {
                         Alert.alert('Notificaciones', 'Abriendo panel de estado de tus pedidos...');
                         setNotifications(0);
                     }}
+                    showBackButton={true}
+                    onBackPress={() => handOnBackPress()}
                 />
+                <View className="h-[15%] bg-emerald-600 justify-center items-center rounded-b-3xl">
+                    <Text className="text-white text-lg font-bold">
+                        Menú de platos
+                    </Text>
+                </View>
                 <MenuDishesComponent
-                   menuData={menuData}
+                    menuData={menuData}
                 />
             </View>
         </SafeAreaView>

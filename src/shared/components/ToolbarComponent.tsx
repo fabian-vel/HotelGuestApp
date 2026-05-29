@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, TextInput, SafeAreaView} from 'react-native';
-import {Search} from 'lucide-react-native';
+import {View, TextInput, SafeAreaView, TouchableOpacity} from 'react-native';
+import {Search, ArrowLeft} from 'lucide-react-native';
 import NotificationBellComponent from '../../features/menu/components/NotificationBellComponent';
 
 interface ToolbarProps {
@@ -8,14 +8,27 @@ interface ToolbarProps {
     onChangeSearch: (text: string) => void;
     notificationCount: number;
     onBellPress: () => void;
+    showBackButton?: boolean;
+    onBackPress?: () => void;
 }
 
-export default function ToolbarComponent({searchValue, onChangeSearch, notificationCount, onBellPress}: Readonly<ToolbarProps>) {
+export default function ToolbarComponent({
+    searchValue,
+    onChangeSearch,
+    notificationCount,
+    onBellPress,
+    showBackButton = false,
+    onBackPress
+}: Readonly<ToolbarProps>) {
     return (
-        <SafeAreaView className="bg-stone-50 border-b border-stone-200 shadow-sm">
-            <View className="flex-row items-center justify-between px-4 py-3 gap-3">
-                <View
-                    className="flex-1 flex-row items-center bg-stone-100 rounded-xl px-3 py-2 border border-stone-200">
+        <SafeAreaView>
+            <View className="flex-row items-center justify-between px-4 py-3 gap-3 bg-emerald-600 border-0">
+                {showBackButton && (
+                    <TouchableOpacity onPress={onBackPress} activeOpacity={0.7} className="mr-2">
+                        <ArrowLeft size={24} color="#ffffff" />
+                    </TouchableOpacity>
+                )}
+                <View className="flex-1 flex-row items-center bg-stone-100 rounded-xl px-3 py-2 border border-stone-200">
                     <Search size={18} color="#a8a29e" className="mr-2"/>
                     <TextInput
                         className="flex-1 text-stone-800 text-base p-0"
@@ -31,4 +44,3 @@ export default function ToolbarComponent({searchValue, onChangeSearch, notificat
         </SafeAreaView>
     );
 }
-

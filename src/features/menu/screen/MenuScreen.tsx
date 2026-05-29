@@ -31,6 +31,7 @@ export default function MenuScreen() {
                         Alert.alert('Notificaciones', 'Abriendo panel de estado de tus pedidos...');
                         setNotifications(0);
                     }}
+                    showBackButton={false}
                 />
                 <CarouselComponent
                     title="Menú de comidas"
@@ -46,4 +47,3 @@ export default function MenuScreen() {
         </SafeAreaView>
     );
 }
-
