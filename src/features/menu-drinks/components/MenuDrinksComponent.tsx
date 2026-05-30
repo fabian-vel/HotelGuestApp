@@ -3,11 +3,11 @@ import {FlatList, SafeAreaView, View} from "react-native";
 import CardComponent from "@/shared/components/CardComponent";
 import {Dish} from "@/types/domain";
 
-interface DishProps {
+interface Props {
     menuData: Dish[];
 }
 
-export default function MenuDishesComponent({ menuData }: Readonly<DishProps>) {
+export default function MenuDishesComponent({ menuData }: Readonly<Props>) {
     const Item = ({dish}: any) => (
         <View className="w-full items-center">
             <CardComponent

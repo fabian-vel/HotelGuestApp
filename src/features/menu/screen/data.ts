@@ -13,7 +13,7 @@ export const menuData: Dish[] = [
         title: 'Hamburguesa Americana',
         image: 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?q=80&w=600&auto=format&fit=crop',
         description: 'Carne de res premium, queso cheddar, tocino ahumado y papas fritas.',
-        price: 14.50,
+        price: 14.5,
     },
     {
         id: '3',
@@ -41,6 +41,6 @@ export const menuData: Dish[] = [
         title: 'Tiramisú',
         image: 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?q=80&w=600&auto=format&fit=crop',
         description: 'Postre italiano con capas de bizcocho, mascarpone y café espresso.',
-        price: 7.50,
+        price: 7.5,
     },
 ];

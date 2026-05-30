@@ -1,48 +1,46 @@
 import React, {useState} from 'react';
-import {View, Alert, SafeAreaView} from 'react-native';
+import {View, SafeAreaView} from 'react-native';
 import ToolbarComponent from '../../../shared/components/ToolbarComponent';
-import CarouselComponent from '../components/CarouselComponent';
-import {menuData} from "@/features/menu/screen/data";
-import {ButtonComponent} from "@/shared/components";
-import { useNavigation } from '@react-navigation/native';
-import {StackNavigationProp} from "@react-navigation/stack";
-import {RootStackParamList} from "@/types/navigation";
-
-type menuDishesNavigationProp = StackNavigationProp<RootStackParamList, 'MenuDishes'>;
-
+import AccordionComponent from "@/features/menu/components/AccordionComponent";
+import {CupSoda, Utensils} from "lucide-react-native";
 
 export default function MenuScreen() {
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(3);
-    const navigation = useNavigation<menuDishesNavigationProp>();
-
-    const handMenuDishesSubmit = () => {
-        navigation.replace('MenuDishes');
-    }
 
     return (
-        <SafeAreaView className="flex-1 bg-stone-100">
+        <SafeAreaView>
             <View className="flex-1">
                 <ToolbarComponent
                     searchValue={search}
                     onChangeSearch={setSearch}
                     notificationCount={notifications}
                     onBellPress={() => {
-                        Alert.alert('Notificaciones', 'Abriendo panel de estado de tus pedidos...');
                         setNotifications(0);
                     }}
                     showBackButton={false}
                 />
-                <CarouselComponent
-                    title="Menú de comidas"
-                    data={menuData}
+
+                <AccordionComponent
+                    title="Platos"
+                    TitleIcon={Utensils}
+                    list={[
+                        {label: 'Entradas', localImage: require('../../../../assets/img/1.png')},
+                        {label: 'Platos Fuertes', localImage: require('../../../../assets/img/5.png')},
+                        {label: 'Postres', localImage: require('../../../../assets/img/7.png')}
+                    ]}
                 />
-                <View className="flex-1 flex-row px-4">
-                    <ButtonComponent
-                        title={"Ver menu de platos"}
-                        onPress={() => handMenuDishesSubmit()}
-                    />
-                </View>
+
+                <AccordionComponent
+                    title="Bebidas"
+                    TitleIcon={CupSoda}
+                    list={[
+                        { label: 'Jugos', localImage: require('../../../../assets/img/6.png')},
+                        { label: 'Cervezas', localImage: require('../../../../assets/img/4.png')},
+                        { label: 'Cócteles', localImage: require('../../../../assets/img/2.png')},
+                        { label: 'Gaseosas', localImage: require('../../../../assets/img/8.png')}
+                    ]}
+                />
             </View>
         </SafeAreaView>
     );

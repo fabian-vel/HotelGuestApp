@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, Image, ImageSourcePropType} from 'react-native';
+import {View, Text} from 'react-native';
 import ButtonComponent from './ButtonComponent';
 import {Dish} from '@/types/domain';
+import {ImageComponent} from "@/shared/components/ImageComponent";
 
 interface CardComponentProps {
     dish: Dish;
@@ -10,11 +11,13 @@ interface CardComponentProps {
 
 export default function CardComponent({dish, hideDescription = false}: Readonly<CardComponentProps>) {
     const {title, image, description, price} = dish;
-    const imageSource: ImageSourcePropType = typeof image === 'string' ? {uri: image} : image;
 
     return (
         <View className="flex-row bg-white shadow-md border border-stone-200 w-full max-w-sm overflow-hidden h-28">
-            <Image source={imageSource} className="w-28 h-full" resizeMode="cover"/>
+            <ImageComponent
+                image={image}
+                className="w-28 h-full"
+            />
             <View className="flex-1 p-3 justify-between">
                 <View>
                     <Text className="font-bold text-stone-900 text-base leading-tight">{title}</Text>

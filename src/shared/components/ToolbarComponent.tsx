@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TextInput, SafeAreaView, TouchableOpacity} from 'react-native';
 import {Search, ArrowLeft} from 'lucide-react-native';
-import NotificationBellComponent from '../../features/menu/components/NotificationBellComponent';
+import NotificationBellComponent from './NotificationBellComponent';
 
 interface ToolbarProps {
     searchValue: string;
