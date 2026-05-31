@@ -36,7 +36,7 @@ export default function LoginForm({onSubmit, isLoading}: Readonly<LoginFormProps
                 }}
                 error={error}
                 autoCapitalize="characters"
-                secureTextEntry={true}
+                //secureTextEntry={true}
             />
             <ButtonComponent title="Ingresar a la Habitación" onPress={handlePress} isLoading={isLoading}/>
         </View>

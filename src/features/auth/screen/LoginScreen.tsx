@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import LoginForm from '../components/LoginForm';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -15,7 +15,6 @@ export default function LoginScreen() {
         setLoading(true);
         setTimeout(() => {
             setLoading(false);
-            Alert.alert('Código Recibido', `Intentando conectar habitación con código: ${code}`);
             navigation.replace('Menu');
         }, 2000);
     };
