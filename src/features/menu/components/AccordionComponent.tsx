@@ -4,20 +4,23 @@ import {ChevronDown} from "lucide-react-native";
 import {ImageComponent} from "@/shared/components/ImageComponent";
 
 interface AccordionItem {
+    id: number;
     label?: string;
     localImage?: ImageSourcePropType;
 }
 
 interface AccordionProps {
     title?: string;
-    TitleIcon?: React.ComponentType<any>;
+    LocalImageTitle?: ImageSourcePropType;
     list: AccordionItem[];
+    onSelectSubmenu?: (submenuId: number, submenuName: string) => void;
 }
 
 export default function AccordionComponent({
                                                title,
-                                               TitleIcon,
+                                               LocalImageTitle,
                                                list,
+                                               onSelectSubmenu,
                                            }: Readonly<AccordionProps>) {
     const [expanded, setExpanded] = useState(false);
 
@@ -46,9 +49,11 @@ export default function AccordionComponent({
                     expanded ? 'rounded-t-xl' : 'rounded-xl'}`}>
                 <View className="flex-row items-center justify-between">
                     <View className="flex-row items-center">
-                        {TitleIcon && (
-                            <TitleIcon size={22} className="text-gray-700 mr-3"/>
-                        )}
+                        <ImageComponent
+                            localImage={LocalImageTitle}
+                            style={{width: 40, height: 40}}
+                            className={"mr-4"}
+                        />
                         <Text className="text-lg font-bold text-gray-800">
                             {title}
                         </Text>
@@ -66,12 +71,18 @@ export default function AccordionComponent({
                         return (
                             <TouchableOpacity
                                 key={index}
+                                onPress={() =>
+                                    onSelectSubmenu?.(
+                                        item.id,
+                                        item.label ?? ''
+                                    )
+                                }
                                 className={`border-x border-b border-gray-300 p-2 ml-2 mr-2 bg-gray-50 ${
                                     isLastItem ? 'rounded-b-xl' : ''}`}>
                                 <View className="flex-row items-center">
                                     <ImageComponent
                                         localImage={item?.localImage}
-                                        style={{ width: 40, height: 40 }}
+                                        style={{width: 40, height: 40}}
                                         className={"mr-4"}
                                     />
                                     <Text className="text-base text-gray-700">
