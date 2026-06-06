@@ -34,6 +34,7 @@ export default function MenuScreen() {
                         setNotifications(0);
                     }}
                     showBackButton={false}
+                    title={"Menú"}
                 />
 
                 <AccordionComponent

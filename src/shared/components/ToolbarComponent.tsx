@@ -1,7 +1,6 @@
-import React from 'react';
-import {View, TextInput, SafeAreaView, TouchableOpacity} from 'react-native';
-import {Search, ArrowLeft} from 'lucide-react-native';
-import NotificationBellComponent from './NotificationBellComponent';
+import React, {useState} from 'react';
+import {View, TextInput, SafeAreaView, TouchableOpacity, Text} from 'react-native';
+import {Search, ArrowLeft, X} from 'lucide-react-native';
 
 interface ToolbarProps {
     searchValue: string;
@@ -10,36 +9,65 @@ interface ToolbarProps {
     onBellPress: () => void;
     showBackButton?: boolean;
     onBackPress?: () => void;
+    title?: string;
 }
 
 export default function ToolbarComponent({
-    searchValue,
-    onChangeSearch,
-    notificationCount,
-    onBellPress,
-    showBackButton = false,
-    onBackPress
-}: Readonly<ToolbarProps>) {
+                                             searchValue,
+                                             onChangeSearch,
+                                             showBackButton = false,
+                                             onBackPress,
+                                             title = '',
+                                         }: Readonly<ToolbarProps>) {
+    const [isSearching, setIsSearching] = useState(false);
+
     return (
-        <SafeAreaView>
-            <View className="flex-row items-center justify-between px-4 py-3 gap-3 bg-emerald-600 border-0">
-                {showBackButton && (
-                    <TouchableOpacity onPress={onBackPress} activeOpacity={0.7} className="mr-2">
-                        <ArrowLeft size={24} color="#ffffff" />
-                    </TouchableOpacity>
+        <SafeAreaView className="bg-emerald-600">
+            <View className="flex-row items-center justify-between h-14 px-4 bg-emerald-600 relative">
+
+                {isSearching ? (
+                    <View className="flex-1 flex-row items-center bg-stone-100 rounded-xl px-3 py-1.5 border border-stone-200 z-10 animate-fade-in">
+                        <Search size={18} color="#a8a29e" className="mr-2"/>
+                        <TextInput
+                            className="flex-1 text-stone-800 text-base p-0"
+                            placeholder="Buscar platillos, bebidas..."
+                            placeholderTextColor="#a8a29e"
+                            value={searchValue}
+                            onChangeText={onChangeSearch}
+                            returnKeyType="search"
+                            autoFocus={true}
+                        />
+                        <TouchableOpacity onPress={() => {
+                            setIsSearching(false);
+                            onChangeSearch('');
+                        }}>
+                            <X size={18} color="#a8a29e" />
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <>
+                        <View className="w-10 justify-center z-10">
+                            {showBackButton && (
+                                <TouchableOpacity
+                                    onPress={onBackPress}
+                                    activeOpacity={0.7}
+                                >
+                                    <ArrowLeft size={24} color="#ffffff"/>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                        <View className="absolute left-0 right-0 top-0 bottom-0 justify-center items-center z-0">
+                            <Text className="text-white f-bold text-[22px] font-semibold" numberOfLines={1}>
+                                {title}
+                            </Text>
+                        </View>
+                        <View className="w-10 items-end justify-center z-10">
+                            <TouchableOpacity onPress={() => setIsSearching(true)}>
+                                <Search size={24} color="#ffffff"/>
+                            </TouchableOpacity>
+                        </View>
+                    </>
                 )}
-                <View className="flex-1 flex-row items-center bg-stone-100 rounded-xl px-3 py-2 border border-stone-200">
-                    <Search size={18} color="#a8a29e" className="mr-2"/>
-                    <TextInput
-                        className="flex-1 text-stone-800 text-base p-0"
-                        placeholder="Buscar platillos, bebidas..."
-                        placeholderTextColor="#a8a29e"
-                        value={searchValue}
-                        onChangeText={onChangeSearch}
-                        returnKeyType="search"
-                    />
-                </View>
-                <NotificationBellComponent count={notificationCount} onPress={onBellPress}/>
             </View>
         </SafeAreaView>
     );

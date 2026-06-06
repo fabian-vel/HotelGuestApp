@@ -27,7 +27,7 @@ export const ImageComponent = ({
             source={imageSource}
             style={style}
             className={className}
-            resizeMode="contain"
+            resizeMode="cover"
         />
     );
 };
