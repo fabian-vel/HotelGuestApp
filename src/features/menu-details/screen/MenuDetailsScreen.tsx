@@ -50,9 +50,9 @@ export const MenuDetailsScreen = ({route}: Props) => {
         setModalVisible(true);
     };
 
-    console.log(submenuId);
-    console.log(submenuName);
-    console.log(cart);
+    console.log("submenuId ",submenuId);
+    console.log("submenuName ", submenuName);
+    console.log("cart", cart);
 
     return (
         <SafeAreaView className="flex-1 bg-stone-100">
@@ -63,6 +63,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
                     notificationCount={notifications}
                     onBellPress={() => setNotifications(0)}
                     showBackButton={true}
+                    title={submenuName}
                 />
                 <ScrollView
                     className="flex-1 h-full"

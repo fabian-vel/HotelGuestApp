@@ -4,19 +4,28 @@ import LoginForm from '../components/LoginForm';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/types/navigation';
+import {login} from "@/features/auth/service/authService";
+import {useAuthStore} from "@/features/auth/store/authStore";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 export default function LoginScreen() {
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation<LoginNavigationProp>();
+    const saveToken = useAuthStore((state) => state.saveToken);
 
-    const handleLoginSubmit = (code: string) => {
+    const handleLoginSubmit = async (habitacion: string, codigo: string) => {
         setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
+        try {
+            const response = await login(habitacion, codigo);
+            await saveToken(response.token);
             navigation.replace('Menu');
-        }, 2000);
+        } catch (error: any) {
+            const message = error.response?.data?.message ?? 'Error al iniciar sesión';
+            //Alert.alert('Error', message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -38,4 +47,3 @@ export default function LoginScreen() {
         </SafeAreaView>
     );
 }
-
