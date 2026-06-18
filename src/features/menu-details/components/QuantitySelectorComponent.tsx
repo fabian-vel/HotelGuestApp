@@ -19,7 +19,7 @@ export default function QuantitySelectorComponent({
             <View className="flex-row justify-center w-20">
                 <TouchableOpacity
                     onPress={onIncrease}
-                    className="w-10 h-8 border border-gray-300 rounded-xl items-center justify-center"
+                    className="w-10 h-8 border border-gray-300 rounded-full items-center justify-center"
                 >
                     <Plus size={16} color="#000" />
                 </TouchableOpacity>
@@ -32,7 +32,7 @@ export default function QuantitySelectorComponent({
 
             <TouchableOpacity
                 onPress={onDecrease}
-                className="w-7 h-8 border border-gray-300 border-r-0 rounded-l-xl items-center justify-center"
+                className="w-7 h-8 border border-gray-300 border-r-0 rounded-l-full items-center justify-center"
             >
                 <Minus size={14} color="#000" />
             </TouchableOpacity>
@@ -45,7 +45,7 @@ export default function QuantitySelectorComponent({
 
             <TouchableOpacity
                 onPress={onIncrease}
-                className="w-7 h-8 border border-gray-300 border-l-0 rounded-r-xl items-center justify-center"
+                className="w-7 h-8 border border-gray-300 border-l-0 rounded-r-full items-center justify-center"
             >
                 <Plus size={14} color="#000" />
             </TouchableOpacity>

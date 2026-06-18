@@ -1,27 +1,48 @@
-import React, {useState} from 'react';
-import {View, SafeAreaView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, SafeAreaView, ActivityIndicator} from 'react-native';
 import ToolbarComponent from '../../../shared/components/ToolbarComponent';
 import AccordionComponent from "@/features/menu/components/AccordionComponent";
 import {RootStackParamList} from "@/types/navigation";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {useNavigation} from "@react-navigation/native";
+import {getCategorias, MenuCategoriaResponse} from "@/features/menu/service/menuService";
+import {getCategoryImage} from "@/shared/util/imageMap";
 
 type MenuNavigationProp = StackNavigationProp<RootStackParamList, 'Menu'>;
 
 export default function MenuScreen() {
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(3);
+    const [categorias, setCategorias] = useState<MenuCategoriaResponse[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const navigation = useNavigation<MenuNavigationProp>();
-    const handleSelectSubmenu = (
-        submenuId: number,
-        submenuName: string
-    ) => {
-        navigation.replace('MenuDetail', {
-            submenuId,
-            submenuName,
-        });
+
+    useEffect(() => {
+        const fetchCategorias = async () => {
+            try {
+                const data = await getCategorias();
+                setCategorias(data);
+            } catch (error) {
+                console.error('Error al cargar categorías', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCategorias();
+    }, []);
+
+    const handleSelectSubmenu = (submenuId: number, submenuName: string) => {
+        navigation.replace('MenuDetail', {submenuId, submenuName});
     };
+
+    if (loading) {
+        return (
+            <SafeAreaView className="flex-1 justify-center items-center">
+                <ActivityIndicator size="large"/>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView>
@@ -30,35 +51,24 @@ export default function MenuScreen() {
                     searchValue={search}
                     onChangeSearch={setSearch}
                     notificationCount={notifications}
-                    onBellPress={() => {
-                        setNotifications(0);
-                    }}
+                    onBellPress={() => setNotifications(0)}
                     showBackButton={false}
                     title={"Menú"}
                 />
 
-                <AccordionComponent
-                    title="Platos"
-                    LocalImageTitle={require('../../../../assets/img/9.png')}
-                    onSelectSubmenu={handleSelectSubmenu}
-                    list={[
-                        {id: 1, label: 'Entradas', localImage: require('../../../../assets/img/1.png')},
-                        {id: 2, label: 'Platos Fuertes', localImage: require('../../../../assets/img/5.png')},
-                        {id: 3, label: 'Postres', localImage: require('../../../../assets/img/7.png')}
-                    ]}
-                />
-
-                <AccordionComponent
-                    title="Bebidas"
-                    LocalImageTitle={require('../../../../assets/img/10.png')}
-                    onSelectSubmenu={handleSelectSubmenu}
-                    list={[
-                        {id: 4, label: 'Jugos', localImage: require('../../../../assets/img/6.png')},
-                        {id: 5, label: 'Cervezas', localImage: require('../../../../assets/img/4.png')},
-                        {id: 6, label: 'Cócteles', localImage: require('../../../../assets/img/2.png')},
-                        {id: 7, label: 'Gaseosas', localImage: require('../../../../assets/img/8.png')}
-                    ]}
-                />
+                {categorias.map((categoria) => (
+                    <AccordionComponent
+                        key={categoria.mecaId}
+                        title={categoria.mecaNombre}
+                        LocalImageTitle={getCategoryImage(categoria.mecaId, categoria.mecaImagenUrl)}
+                        onSelectSubmenu={handleSelectSubmenu}
+                        list={categoria.subCategorias.map((sub) => ({
+                            id: sub.mecaId,
+                            label: sub.mecaNombre,
+                            localImage: getCategoryImage(sub.mecaId, sub.mecaImagenUrl),
+                        }))}
+                    />
+                ))}
             </View>
         </SafeAreaView>
     );

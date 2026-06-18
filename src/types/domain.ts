@@ -6,5 +6,5 @@ export interface Dish {
   description: string;
   price: number;
   category: string;
+  quantity?: number;
 }
-
