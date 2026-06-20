@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView } from 'react-native';
 import LoginForm from '../components/LoginForm';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@/types/navigation';
+import { RootStackParamList } from '@/types/Navigation';
 import {login} from "@/features/auth/service/authService";
 import {useAuthStore} from "@/features/auth/store/authStore";
 

@@ -2,11 +2,12 @@ import React, {useState, useEffect} from 'react';
 import {View, SafeAreaView, ActivityIndicator} from 'react-native';
 import ToolbarComponent from '../../../shared/components/ToolbarComponent';
 import AccordionComponent from "@/features/menu/components/AccordionComponent";
-import {RootStackParamList} from "@/types/navigation";
+import {RootStackParamList} from "@/types/Navigation";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {useNavigation} from "@react-navigation/native";
-import {getCategorias, MenuCategoriaResponse} from "@/features/menu/service/menuService";
+import {getCategorias} from "@/features/menu/service/MenuService";
 import {getCategoryImage} from "@/shared/util/imageMap";
+import {MenuCategoriaResponse} from "@/types/MenuCategoriaResponse";
 
 type MenuNavigationProp = StackNavigationProp<RootStackParamList, 'Menu'>;
 

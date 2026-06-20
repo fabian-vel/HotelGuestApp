@@ -1,4 +1,4 @@
-import {Dish} from "@/types/domain";
+import {Dish} from "@/types/Dish";
 
 export const menuData: Dish[] = [
     {

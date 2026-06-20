@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Modal, SafeAreaView, TouchableOpacity, View, Text, Pressable} from "react-native";
-import {Dish} from "@/types/domain";
+import {Dish} from "@/types/Dish";
 import {ChevronDown} from "lucide-react-native";
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import QuantitySelectorComponent from "@/features/menu-details/components/QuantitySelectorComponent";

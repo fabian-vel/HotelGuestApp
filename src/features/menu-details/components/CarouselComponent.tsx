@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import CardCarouselComponent from './CardCarouselComponent';
-import {Dish} from "@/types/domain";
+import {Dish} from "@/types/Dish";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 const CAROUSEL_PADDING = 16;

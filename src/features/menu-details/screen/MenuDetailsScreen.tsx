@@ -1,15 +1,17 @@
-import React, {useCallback, useState} from "react";
-import {SafeAreaView, ScrollView, View} from "react-native";
+import React, {useCallback, useEffect, useState} from "react";
+import {ActivityIndicator, SafeAreaView, ScrollView, View} from "react-native";
 import ToolbarComponent from "@/shared/components/ToolbarComponent";
 import {menuData} from "@/features/menu/screen/data";
-import {Dish} from "@/types/domain";
+import {Dish} from "@/types/Dish";
 import {RouteProp} from "@react-navigation/core";
-import {RootStackParamList} from "@/types/navigation";
+import {RootStackParamList} from "@/types/Navigation";
 import CardComponent from "@/features/menu-details/components/CardComponent";
 import {BottomSheetComponent} from "@/features/menu-details/components/BottomSheetComponent";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {useNavigation} from "@react-navigation/native";
 import LabelCarouselComponent from "@/features/menu-details/components/LabelCarouselComponent";
+import {MenuItemRequest} from "@/types/MenuItemRequest";
+import {getMenuItem} from "@/features/menu-details/service/MenuetailsService";
 
 type MenuDetailRouteProp = RouteProp<RootStackParamList, 'MenuDetail'>;
 type MenuDetailNavigationProp = StackNavigationProp<RootStackParamList, 'MenuDetail'>;
@@ -25,6 +27,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
     const [cart, setCart] = useState<Record<string, number>>({});
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
+    const [loading, setLoading] = useState(true);
     const {submenuId, submenuName} = route.params;
     const etiquetas = [
         {id: 0, name: "Todos"},
@@ -35,7 +38,24 @@ export const MenuDetailsScreen = ({route}: Props) => {
         {id: 5, name: "Asados"},
         {id: 6, name: "Sopas"},
         {id: 7, name: "Comida de mar"}
-    ]
+    ];
+
+    useEffect(() => {
+        const fetchMenuItem = async (body: MenuItemRequest) => {
+            try {
+                const data = await getMenuItem(body);
+                console.log('DATA: ', data);
+            } catch (error) {
+                console.error('Error al cargar el item del menú', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        const body: MenuItemRequest = {
+            mecaId: submenuId,
+        };
+        fetchMenuItem(body);
+    }, []);
 
     const handleIncrease = (dishId: string) => {
         setCart(prev => ({
@@ -90,6 +110,14 @@ export const MenuDetailsScreen = ({route}: Props) => {
     console.log("submenuId ", submenuId);
     console.log("submenuName ", submenuName);
     console.log("cart", cart);
+
+    if (loading) {
+        return (
+            <SafeAreaView className="flex-1 justify-center items-center">
+                <ActivityIndicator size="large"/>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-stone-100">

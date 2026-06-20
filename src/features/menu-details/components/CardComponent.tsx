@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {Dish} from '@/types/domain';
+import {Dish} from '@/types/Dish';
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import QuantitySelectorComponent from "@/features/menu-details/components/QuantitySelectorComponent";
 

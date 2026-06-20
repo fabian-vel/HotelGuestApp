@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {RootStackParamList} from "@/types/navigation";
+import {RootStackParamList} from "@/types/Navigation";
 import LoginScreen from '../features/auth/screen/LoginScreen';
 import MenuScreen from '../features/menu/screen/MenuScreen';
 import {MenuDetailsScreen} from "@/features/menu-details/screen/MenuDetailsScreen";
