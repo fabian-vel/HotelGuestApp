@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Modal, SafeAreaView, TouchableOpacity, View, Text, Pressable} from "react-native";
-import {Dish} from "@/types/Dish";
+import {Item} from "@/types/Item";
 import {ChevronDown} from "lucide-react-native";
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import QuantitySelectorComponent from "@/features/menu-details/components/QuantitySelectorComponent";
@@ -12,7 +12,7 @@ type Label = {
 
 interface BottomSheetComponentProps {
     visible: boolean;
-    dish: Dish | null;
+    dish: Item | null;
     onClose: () => void;
     labels?: Label[];
     onQuantityChange?: (quantity: number) => void;

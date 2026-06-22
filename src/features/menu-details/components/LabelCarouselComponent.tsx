@@ -5,27 +5,23 @@ import {
     ScrollView,
     Pressable,
 } from 'react-native';
-
-type Label = {
-    id: number;
-    name: string;
-};
+import {Etiqueta} from "@/types/Etiqueta";
 
 interface LabelProps {
-    labels: Label[];
+    etiqueta: Etiqueta[];
     defaultSelectedId: number;
 }
 
 export default function LabelCarouselComponent({
-                                                   labels,
+                                                   etiqueta,
                                                    defaultSelectedId,
                                                }: Readonly<LabelProps>) {
 
     const [selectedId, setSelectedId] = useState(defaultSelectedId);
 
-    const handlePress = (label: Label) => {
-        setSelectedId(label.id);
-        console.log('Label seleccionado:', label);
+    const handlePress = (etiqueta: Etiqueta) => {
+        setSelectedId(etiqueta.etiqId);
+        console.log('Label seleccionado:', etiqueta);
     };
 
     return (
@@ -35,17 +31,17 @@ export default function LabelCarouselComponent({
                 showsHorizontalScrollIndicator={false}
                 contentContainerClassName="px-4 gap-2"
             >
-                {labels.map((label) => {
-                    const selected = label.id === selectedId;
+                {etiqueta.map((etiqueta) => {
+                    const selected = etiqueta.etiqId === selectedId;
 
                     return (
                         <Pressable
-                            key={label.id}
-                            onPress={() => handlePress(label)}
+                            key={etiqueta.etiqId}
+                            onPress={() => handlePress(etiqueta)}
                             className={`px-4 py-2 rounded-full ${selected ? 'bg-black' : 'bg-gray-300'}`}
                         >
                             <Text className={selected ? 'text-white' : 'text-black'}>
-                                {label.name}
+                                {etiqueta.etiqNombre}
                             </Text>
                         </Pressable>
                     );

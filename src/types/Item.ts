@@ -1,4 +1,4 @@
-export interface Dish {
+export interface Item {
   id: string;
   title: string;
   /** URL remota (string) o recurso local (number via require()) */

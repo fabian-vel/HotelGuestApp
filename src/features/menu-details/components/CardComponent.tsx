@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {Dish} from '@/types/Dish';
+import {Item} from '@/types/Item';
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import QuantitySelectorComponent from "@/features/menu-details/components/QuantitySelectorComponent";
 
 interface CardComponentProps {
-    dish: Dish;
+    dish: Item;
     hideDescription?: boolean;
 
     quantity: number;

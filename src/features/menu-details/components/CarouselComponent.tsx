@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import CardCarouselComponent from './CardCarouselComponent';
-import {Dish} from "@/types/Dish";
+import {Item} from "@/types/Item";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 const CAROUSEL_PADDING = 16;
@@ -12,7 +12,7 @@ const SNAP_INTERVAL = CARD_WIDTH + CARD_MARGIN;
 
 interface CarouselComponentProps {
     title: string;
-    data: Dish[];
+    data: Item[];
 }
 
 export default function CarouselComponent({title, data}: Readonly<CarouselComponentProps>) {

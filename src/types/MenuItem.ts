@@ -1,4 +1,4 @@
-export interface MenuItemResponse {
+export interface MenuItem {
     meitId: number,
     meitNombre: string,
     meitDescripcion: string,

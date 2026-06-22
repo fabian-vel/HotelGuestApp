@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {ActivityIndicator, SafeAreaView, ScrollView, View} from "react-native";
-import ToolbarComponent from "@/shared/components/ToolbarComponent";
+import ToolBarComponent from "@/shared/components/ToolBarComponent";
 import {menuData} from "@/features/menu/screen/data";
-import {Dish} from "@/types/Dish";
+import {Item} from "@/types/Item";
 import {RouteProp} from "@react-navigation/core";
 import {RootStackParamList} from "@/types/Navigation";
 import CardComponent from "@/features/menu-details/components/CardComponent";
@@ -10,8 +10,10 @@ import {BottomSheetComponent} from "@/features/menu-details/components/BottomShe
 import {StackNavigationProp} from "@react-navigation/stack";
 import {useNavigation} from "@react-navigation/native";
 import LabelCarouselComponent from "@/features/menu-details/components/LabelCarouselComponent";
-import {MenuItemRequest} from "@/types/MenuItemRequest";
-import {getMenuItem} from "@/features/menu-details/service/MenuetailsService";
+import {getMenuItem} from "@/features/menu-details/service/MenuItemService";
+import {getEtiquetas} from "@/features/menu-details/service/EtiquetaService";
+import {MenuItem} from "@/types/MenuItem";
+import {Etiqueta} from "@/types/Etiqueta";
 
 type MenuDetailRouteProp = RouteProp<RootStackParamList, 'MenuDetail'>;
 type MenuDetailNavigationProp = StackNavigationProp<RootStackParamList, 'MenuDetail'>;
@@ -26,35 +28,28 @@ export const MenuDetailsScreen = ({route}: Props) => {
     const [notifications, setNotifications] = useState(3);
     const [cart, setCart] = useState<Record<string, number>>({});
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
+    const [selectedDish, setSelectedDish] = useState<Item | null>(null);
     const [loading, setLoading] = useState(true);
+    const [items, setItems] = useState<MenuItem[]>([]);
+    const [etiquetas, setEtiquetas] = useState<Etiqueta[]>([]);
     const {submenuId, submenuName} = route.params;
-    const etiquetas = [
-        {id: 0, name: "Todos"},
-        {id: 1, name: "Carne"},
-        {id: 2, name: "Ensalada"},
-        {id: 3, name: "Pescado"},
-        {id: 4, name: "Aves"},
-        {id: 5, name: "Asados"},
-        {id: 6, name: "Sopas"},
-        {id: 7, name: "Comida de mar"}
-    ];
 
     useEffect(() => {
-        const fetchMenuItem = async (body: MenuItemRequest) => {
+        const fetchData = async () => {
             try {
-                const data = await getMenuItem(body);
-                console.log('DATA: ', data);
+                const [items, etiquetas] = await Promise.all([
+                    getMenuItem({ mecaId: submenuId }),
+                    getEtiquetas({ mecaId: submenuId, consultaPorCategoria: true}),
+                ]);
+                setItems(items);
+                setEtiquetas(etiquetas);
             } catch (error) {
-                console.error('Error al cargar el item del menú', error);
+                console.error('Error al cargar datos del menú', error);
             } finally {
                 setLoading(false);
             }
         };
-        const body: MenuItemRequest = {
-            mecaId: submenuId,
-        };
-        fetchMenuItem(body);
+        fetchData();
     }, []);
 
     const handleIncrease = (dishId: string) => {
@@ -83,14 +78,12 @@ export const MenuDetailsScreen = ({route}: Props) => {
 
 
 
-    const handleOpenDish = (dish: Dish) => {
-        // Pasa la cantidad actual del cart (o 1 si aún no fue agregado).
+    const handleOpenDish = (dish: Item) => {
         setSelectedDish({...dish, quantity: cart[dish.id] || 0});
         setModalVisible(true);
     };
 
     const handleBottomSheetQuantityChange = useCallback((quantity: number) => {
-        // Sincroniza selectedDish y el cart en tiempo real.
         setSelectedDish((prev) => {
             if (prev) {
                 setCart(cartPrev => ({
@@ -110,6 +103,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
     console.log("submenuId ", submenuId);
     console.log("submenuName ", submenuName);
     console.log("cart", cart);
+    console.log("items ", items);
 
     if (loading) {
         return (
@@ -122,7 +116,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
     return (
         <SafeAreaView className="flex-1 bg-stone-100">
             <View className="flex-1">
-                <ToolbarComponent
+                <ToolBarComponent
                     searchValue={search}
                     onChangeSearch={setSearch}
                     notificationCount={notifications}
@@ -132,7 +126,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
                     title={submenuName}
                 />
                 <LabelCarouselComponent
-                    labels={etiquetas}
+                    etiqueta={etiquetas}
                     defaultSelectedId={0}
                 />
                 <ScrollView
@@ -145,7 +139,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
                     }}
                     scrollEventThrottle={16}
                 >
-                    {menuData.map((item: Dish) => (
+                    {menuData.map((item: Item) => (
                         <View
                             key={item.id}
                             className="mb-4"

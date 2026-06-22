@@ -12,7 +12,7 @@ interface ToolbarProps {
     title?: string;
 }
 
-export default function ToolbarComponent({
+export default function ToolBarComponent({
                                              searchValue,
                                              onChangeSearch,
                                              showBackButton = false,

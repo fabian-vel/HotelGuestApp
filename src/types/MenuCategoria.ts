@@ -1,8 +1,8 @@
-export interface MenuCategoriaResponse {
+export interface MenuCategoria {
     mecaId: number;
     mecaNombre: string;
     mecaDescripcion: string;
     mecaImagenUrl: string | null;
     mecaParentId: number | null;
-    subCategorias: MenuCategoriaResponse[];
+    subCategorias: MenuCategoria[];
 }

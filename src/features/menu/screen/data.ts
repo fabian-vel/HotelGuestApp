@@ -1,6 +1,6 @@
-import {Dish} from "@/types/Dish";
+import {Item} from "@/types/Item";
 
-export const menuData: Dish[] = [
+export const menuData: Item[] = [
     {
         id: '1',
         title: 'Pizza Margherita',

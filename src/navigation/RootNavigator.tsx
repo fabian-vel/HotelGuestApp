@@ -4,6 +4,7 @@ import {RootStackParamList} from "@/types/Navigation";
 import LoginScreen from '../features/auth/screen/LoginScreen';
 import MenuScreen from '../features/menu/screen/MenuScreen';
 import {MenuDetailsScreen} from "@/features/menu-details/screen/MenuDetailsScreen";
+import {HomeScreen} from "@/features/home/screen/HomeScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -16,8 +17,8 @@ export default function RootNavigator() {
         >
             <Stack.Screen name="Login" component={LoginScreen}/>
             <Stack.Screen name="Menu" component={MenuScreen}/>
-            <Stack.Screen name="MenuDetail" component={MenuDetailsScreen}
-            />
+            <Stack.Screen name="MenuDetail" component={MenuDetailsScreen}/>
+            <Stack.Screen name="Home" component={HomeScreen}/>
         </Stack.Navigator>
     );
 }

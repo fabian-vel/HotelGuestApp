@@ -19,7 +19,7 @@ export default function LoginScreen() {
         try {
             const response = await login(habitacion, codigo);
             await saveToken(response.token);
-            navigation.replace('Menu');
+            navigation.replace('Home');
         } catch (error: any) {
             const message = error.response?.data?.message ?? 'Error al iniciar sesión';
             //Alert.alert('Error', message);
@@ -29,7 +29,7 @@ export default function LoginScreen() {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-stone-100">
+        <SafeAreaView className="flex-1">
             <View className="flex-1 justify-center items-center px-6">
                 <View className="items-center mb-8">
                     <Text className="text-3xl font-serif font-bold text-stone-900 tracking-wide">
