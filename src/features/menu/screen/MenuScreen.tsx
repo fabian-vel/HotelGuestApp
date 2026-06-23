@@ -5,34 +5,27 @@ import AccordionComponent from "@/features/menu/components/AccordionComponent";
 import {RootStackParamList} from "@/types/Navigation";
 import {StackNavigationProp} from "@react-navigation/stack";
 import {useNavigation} from "@react-navigation/native";
-import {getCategorias} from "@/features/menu/service/MenuService";
 import {getCategoryImage} from "@/shared/util/imageMap";
-import {MenuCategoria} from "@/types/MenuCategoria";
 import {BottomBarComponent, BottomBarTab} from "@/shared/components/BottomBarComponent";
+import {useCategoriaStore} from "@/shared/store/categoriaStore";
 
 type MenuNavigationProp = StackNavigationProp<RootStackParamList, 'Menu'>;
 
-export default function MenuScreen() {
+export default function MenuScreen({ route }: Readonly<{ route: any }>) {
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(3);
-    const [categorias, setCategorias] = useState<MenuCategoria[]>([]);
-    const [loading, setLoading] = useState(true);
+    const categoriaId = route?.params?.categoriaId;
+    const { categorias, loading, fetchCategorias } = useCategoriaStore();
 
     const navigation = useNavigation<MenuNavigationProp>();
 
     useEffect(() => {
-        const fetchCategorias = async () => {
-            try {
-                const data = await getCategorias();
-                setCategorias(data);
-            } catch (error) {
-                console.error('Error al cargar categorías', error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchCategorias();
     }, []);
+
+    const categoriasFiltradas = categoriaId
+        ? categorias.filter(c => c.mecaId === categoriaId)
+        : categorias;
 
     const handleSelectSubmenu = (submenuId: number, submenuName: string) => {
         navigation.replace('MenuDetail', {submenuId, submenuName});
@@ -75,7 +68,7 @@ export default function MenuScreen() {
                     title={"Menú"}
                 />
                 <ScrollView style={{ flex: 1 }}>
-                    {categorias.map((categoria) => (
+                    {categoriasFiltradas.map((categoria) => (
                         <AccordionComponent
                             key={categoria.mecaId}
                             title={categoria.mecaNombre}

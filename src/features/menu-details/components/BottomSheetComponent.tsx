@@ -4,6 +4,7 @@ import {Item} from "@/types/Item";
 import {ChevronDown} from "lucide-react-native";
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import QuantitySelectorComponent from "@/features/menu-details/components/QuantitySelectorComponent";
+import {MenuItem} from "@/types/MenuItem";
 
 type Label = {
     id: number;
@@ -12,7 +13,7 @@ type Label = {
 
 interface BottomSheetComponentProps {
     visible: boolean;
-    dish: Item | null;
+    item: MenuItem | null;
     onClose: () => void;
     labels?: Label[];
     onQuantityChange?: (quantity: number) => void;
@@ -20,7 +21,7 @@ interface BottomSheetComponentProps {
 
 export function BottomSheetComponent({
                                          visible,
-                                         dish,
+                                         item,
                                          onClose,
                                          labels,
                                          onQuantityChange
@@ -31,11 +32,11 @@ export function BottomSheetComponent({
     // Al abrir, usa la cantidad del cart (dish.quantity) o 1 si es 0.
     useEffect(() => {
         if (visible) {
-            const initialQty = (dish?.quantity && dish.quantity > 0) ? dish.quantity : 1;
+            const initialQty = (item?.quantity && item.quantity > 0) ? item.quantity : 1;
             setQuantity(initialQty);
             onQuantityChange?.(initialQty);
         }
-    }, [visible, dish?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [visible, item?.meitId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const etiquetas = labels ?? [
         {id: 1, name: "Carne"},
@@ -83,13 +84,13 @@ export function BottomSheetComponent({
                                 className={"rounded-xl"}
                             />
                             <Text className="text-2xl font-bold">
-                                {dish?.title}
+                                {item?.meitNombre}
                             </Text>
                             <Text className="text-2xl">
-                                ${dish?.price}
+                                ${item?.meitPrecio}
                             </Text>
                             <Text  className="text-[17px]">
-                                {dish?.description}
+                                {item?.meitDescripcion}
                             </Text>
                             <View className="flex-row flex-wrap gap-2 w-full">
                                 {etiquetas.map((label) => {
@@ -117,7 +118,7 @@ export function BottomSheetComponent({
                                 onPress={onClose}
                             >
                                 <Text className="text-white">
-                                    Agregar al pedido    ·    ${quantity * (dish?.price ?? 0)}
+                                    Agregar al pedido    ·    ${quantity * (item?.meitPrecio ?? 0)}
                                 </Text>
                             </TouchableOpacity>
                         </View>

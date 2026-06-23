@@ -3,9 +3,10 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {Item} from '@/types/Item';
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import QuantitySelectorComponent from "@/features/menu-details/components/QuantitySelectorComponent";
+import {MenuItem} from "@/types/MenuItem";
 
 interface CardComponentProps {
-    dish: Item;
+    item: MenuItem;
     hideDescription?: boolean;
 
     quantity: number;
@@ -16,7 +17,7 @@ interface CardComponentProps {
 }
 
 export default function CardComponent({
-                                          dish,
+                                          item,
                                           hideDescription = false,
                                           quantity,
                                           onIncrease,
@@ -24,7 +25,7 @@ export default function CardComponent({
                                           onPress,
                                       }: Readonly<CardComponentProps>) {
 
-    const {title, image, description, price} = dish;
+    const {meitNombre, meitImagenUrl, meitDescripcion, meitPrecio} = item;
 
     return (
         <View className="flex-row bg-white rounded-xl border border-gray-300 w-full max-w-sm overflow-hidden h-32">
@@ -32,17 +33,17 @@ export default function CardComponent({
                 <View className="flex-1 p-3 justify-between m-1">
                     <View>
                         <Text className="font-bold text-stone-900 text-[14px] leading-tight">
-                            {title}
+                            {meitNombre}
                         </Text>
                         {!hideDescription && (
                             <Text numberOfLines={2} className="text-stone-500 text-xs mt-1">
-                                {description}
+                                {meitDescripcion}
                             </Text>
                         )}
                     </View>
                     <View className="flex-row items-center justify-between mt-2 w-full">
                         <Text className="text-stone-900 font-bold text-[14px]">
-                            ${price}
+                            ${meitPrecio}
                         </Text>
                     </View>
                 </View>
@@ -64,8 +65,8 @@ export default function CardComponent({
                 activeOpacity={0.8}
             >
                 <ImageComponent
-                    image={image}
-                    className="w-32 h-full"
+                    image={meitImagenUrl}
+                    style={{width: 128, height: 128}}
                 />
             </TouchableOpacity>
         </View>

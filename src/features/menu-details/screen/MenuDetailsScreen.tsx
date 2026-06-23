@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {ActivityIndicator, SafeAreaView, ScrollView, View} from "react-native";
 import ToolBarComponent from "@/shared/components/ToolBarComponent";
-import {menuData} from "@/features/menu/screen/data";
 import {Item} from "@/types/Item";
 import {RouteProp} from "@react-navigation/core";
 import {RootStackParamList} from "@/types/Navigation";
@@ -28,7 +27,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
     const [notifications, setNotifications] = useState(3);
     const [cart, setCart] = useState<Record<string, number>>({});
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedDish, setSelectedDish] = useState<Item | null>(null);
+    const [selectedDish, setSelectedDish] = useState<MenuItem | null>(null);
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState<MenuItem[]>([]);
     const [etiquetas, setEtiquetas] = useState<Etiqueta[]>([]);
@@ -52,7 +51,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
         fetchData();
     }, []);
 
-    const handleIncrease = (dishId: string) => {
+    const handleIncrease = (dishId: number) => {
         setCart(prev => ({
             ...prev,
             [dishId]: (prev[dishId] || 0) + 1,
@@ -61,7 +60,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
 
     const navigation = useNavigation<MenuDetailNavigationProp>();
 
-    const handleDecrease = (dishId: string) => {
+    const handleDecrease = (dishId: number) => {
         setCart(prev => {
             const currentQuantity = prev[dishId] || 0;
             if (currentQuantity <= 1) {
@@ -78,8 +77,8 @@ export const MenuDetailsScreen = ({route}: Props) => {
 
 
 
-    const handleOpenDish = (dish: Item) => {
-        setSelectedDish({...dish, quantity: cart[dish.id] || 0});
+    const handleOpenDish = (dish: MenuItem) => {
+        setSelectedDish({...dish, quantity: cart[dish.meitId] || 0});
         setModalVisible(true);
     };
 
@@ -88,7 +87,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
             if (prev) {
                 setCart(cartPrev => ({
                     ...cartPrev,
-                    [prev.id]: quantity,
+                    [prev.meitId]: quantity,
                 }));
                 return {...prev, quantity};
             }
@@ -139,20 +138,20 @@ export const MenuDetailsScreen = ({route}: Props) => {
                     }}
                     scrollEventThrottle={16}
                 >
-                    {menuData.map((item: Item) => (
+                    {items.map((item: MenuItem) => (
                         <View
-                            key={item.id}
+                            key={item.meitId}
                             className="mb-4"
                         >
                             <CardComponent
-                                dish={item}
+                                item={item}
                                 hideDescription={false}
-                                quantity={cart[item.id] || 0}
+                                quantity={cart[item.meitId] || 0}
                                 onIncrease={() =>
-                                    handleIncrease(item.id)
+                                    handleIncrease(item.meitId)
                                 }
                                 onDecrease={() =>
-                                    handleDecrease(item.id)
+                                    handleDecrease(item.meitId)
                                 }
                                 onPress={() =>
                                     handleOpenDish(item)
@@ -164,7 +163,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
 
                 <BottomSheetComponent
                     visible={modalVisible}
-                    dish={selectedDish}
+                    item={selectedDish}
                     onClose={() => setModalVisible(false)}
                     onQuantityChange={handleBottomSheetQuantityChange}
                 />

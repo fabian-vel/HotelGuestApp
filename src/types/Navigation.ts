@@ -1,6 +1,6 @@
 export type RootStackParamList = {
   Login: undefined;
-  Menu: undefined;
+  Menu: { categoriaId?: number } | undefined;
   MenuDetail: {
     submenuId: number;
     submenuName: string;

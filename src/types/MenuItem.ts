@@ -5,5 +5,6 @@ export interface MenuItem {
     meitPrecio: number,
     meitImagenUrl?: string,
     mecaId: number,
-    mecaParentId: number
+    mecaParentId: number,
+    quantity?: number;
 }
