@@ -30,20 +30,16 @@ export default function MenuScreen({ route }: Readonly<{ route: any }>) {
     const handleSelectSubmenu = (submenuId: number, submenuName: string) => {
         navigation.replace('MenuDetail', {submenuId, submenuName});
     };
-    const handleSelectHome = () => {
-        navigation.replace('Home');
-    };
 
     const handleTabPress = (tab: BottomBarTab) => {
         switch (tab) {
-            case 'Menu':
-                break;
             case 'Inicio':
-                handleSelectHome();
-                break; // ← faltaba esto
+                navigation.replace('Home');
+                break;
+            case 'Menu': break;
             case 'Pedidos':
             case 'Perfil':
-                console.log(`Vista "${tab}" aún no implementada`);
+                navigation.replace('Profile');
                 break;
         }
     };

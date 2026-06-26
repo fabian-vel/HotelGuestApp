@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {ActivityIndicator, SafeAreaView, ScrollView, View} from "react-native";
 import ToolBarComponent from "@/shared/components/ToolBarComponent";
-import {Item} from "@/types/Item";
 import {RouteProp} from "@react-navigation/core";
 import {RootStackParamList} from "@/types/Navigation";
 import CardComponent from "@/features/menu-details/components/CardComponent";

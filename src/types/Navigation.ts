@@ -6,6 +6,7 @@ export type RootStackParamList = {
     submenuName: string;
   };
   Home: undefined;
+  Profile: undefined;
 };
 
 

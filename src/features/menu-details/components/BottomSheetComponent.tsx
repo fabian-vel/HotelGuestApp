@@ -80,6 +80,7 @@ export function BottomSheetComponent({
                         </View>
                         <View className="w-full flex-1 flex-col rounded-xl justify-between">
                             <ImageComponent
+                                image={item?.meitImagenUrl}
                                 style={{width: '100%', height: 180}}
                                 className={"rounded-xl"}
                             />

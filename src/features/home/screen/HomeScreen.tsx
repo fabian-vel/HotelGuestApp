@@ -22,11 +22,11 @@ export function HomeScreen() {
         switch (tab) {
             case 'Inicio': break;
             case 'Menu':
-                navigation.replace('Menu', {}); // sin filtro — lista completa
+                navigation.replace('Menu', {});
                 break;
             case 'Pedidos':
             case 'Perfil':
-                console.log(`Vista "${tab}" aún no implementada`);
+                navigation.replace('Profile');
                 break;
         }
     };

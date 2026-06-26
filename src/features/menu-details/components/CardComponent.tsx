@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {Item} from '@/types/Item';
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import QuantitySelectorComponent from "@/features/menu-details/components/QuantitySelectorComponent";
 import {MenuItem} from "@/types/MenuItem";
