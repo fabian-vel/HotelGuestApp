@@ -2,6 +2,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Animated, ImageSourcePropType} from 'react-native';
 import {ChevronDown} from "lucide-react-native";
 import {ImageComponent} from "@/shared/components/ImageComponent";
+import {Submenu} from "@/types/Submenu";
 
 interface AccordionItem {
     id: number;
@@ -13,7 +14,7 @@ interface AccordionProps {
     title?: string;
     LocalImageTitle?: ImageSourcePropType;
     list: AccordionItem[];
-    onSelectSubmenu?: (submenuId: number, submenuName: string) => void;
+    onSelectSubmenu?: (submenu: Submenu) => void; // ← objeto en vez de parámetros sueltos
 }
 
 export default function AccordionComponent({
@@ -24,9 +25,7 @@ export default function AccordionComponent({
                                            }: Readonly<AccordionProps>) {
     const [expanded, setExpanded] = useState(false);
 
-    const animatedController = useRef(
-        new Animated.Value(0)
-    ).current;
+    const animatedController = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         Animated.timing(animatedController, {
@@ -72,10 +71,10 @@ export default function AccordionComponent({
                             <TouchableOpacity
                                 key={index}
                                 onPress={() =>
-                                    onSelectSubmenu?.(
-                                        item.id,
-                                        item.label ?? ''
-                                    )
+                                    onSelectSubmenu?.({  // ← objeto Submenu
+                                        submenuId: item.id,
+                                        submenuName: item.label ?? ''
+                                    })
                                 }
                                 className={`border-x border-b border-gray-300 p-2 ml-2 mr-2 bg-gray-50 ${
                                     isLastItem ? 'rounded-b-xl' : ''}`}>

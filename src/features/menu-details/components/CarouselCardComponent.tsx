@@ -8,7 +8,7 @@ interface CardCarouselComponentProps {
     price: number;
 }
 
-export default function CardCarouselComponent({ title, image, price }: Readonly<CardCarouselComponentProps>) {
+export default function CarouselCardComponent({ title, image, price }: Readonly<CardCarouselComponentProps>) {
 
     return (
         <View className="flex-col bg-transparent overflow-hidden h-40 w-full">

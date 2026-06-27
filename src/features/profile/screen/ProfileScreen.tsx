@@ -1,13 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Text, View, ActivityIndicator, TouchableOpacity} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {StackNavigationProp} from "@react-navigation/stack";
-import {RootStackParamList} from "@/types/Navigation";
-import {BottomBarComponent, BottomBarTab} from "@/shared/components/BottomBarComponent";
-import {useNavigation} from "@react-navigation/native";
 import {CalendarArrowDown, CalendarArrowUp, Phone, LogOut, ChevronRight, ReceiptText} from "lucide-react-native";
 import {getTokenPayload} from "@/shared/util/jwtUtil";
-import {getFechaAcceso} from "@/features/profile/service/FechaAccesoService";
+import {getFechaAcceso} from "@/features/profile/service/AccessDateService";
 import {HabitacionAcceso} from "@/types/HabitacionAcceso";
 import {useAuthStore} from "@/features/auth/store/authStore";
 
@@ -22,7 +18,6 @@ const formatFecha = (fecha: Date): string =>
 
 const getIniciales = (nombreCompleto: string): string =>
     nombreCompleto.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
-
 
 const Separador = () => (
     <View className="w-full bg-white border-x border-gray-300 items-center justify-center h-[1px]">
@@ -46,19 +41,17 @@ const FilaAccion = ({icono, label, onPress, labelColor = '#000', className = ''}
                 {label}
             </Text>
         </View>
-        <TouchableOpacity
-            onPress={onPress}
-            activeOpacity={0.7}
-        >
+        <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
             <ChevronRight color={'#000'}/>
         </TouchableOpacity>
     </View>
 );
 
-type ProfileNavigationProp = StackNavigationProp<RootStackParamList, 'Profile'>;
+interface ProfileScreenProps {
+    onLogout?: () => void;
+}
 
-export function ProfileScreen() {
-    const navigation = useNavigation<ProfileNavigationProp>();
+export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
     const [habitacion, setHabitacion] = useState<string | null>(null);
     const [nombre, setNombre] = useState<string | null>(null);
     const [acceso, setAcceso] = useState<HabitacionAcceso | null>(null);
@@ -66,23 +59,10 @@ export function ProfileScreen() {
     const [loading, setLoading] = useState(true);
     const clearToken = useAuthStore((state) => state.clearToken);
 
-    const handleTabPress = useCallback((tab: BottomBarTab) => {
-        switch (tab) {
-            case 'Inicio':
-                navigation.replace('Home');
-                break;
-            case 'Menu':
-                navigation.replace('Menu', {});
-                break;
-            default:
-                break;
-        }
-    }, [navigation]);
-
     const handleLogout = useCallback(async () => {
         await clearToken();
-        navigation.replace('Login');
-    }, [clearToken, navigation]);
+        onLogout?.();
+    }, [clearToken, onLogout]);
 
     useEffect(() => {
         const cargarPerfil = async () => {
@@ -113,17 +93,15 @@ export function ProfileScreen() {
     }
 
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: '#fcf8f6'}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: '#fcf8f6'}} edges={['top', 'left', 'right']}>
             <View style={{flex: 1}} className="p-6 items-center">
-
                 <View className="w-20 h-20 bg-emerald-100 justify-center items-center rounded-full mt-[40px]">
                     <Text className="font-bold text-3xl">{iniciales}</Text>
                 </View>
                 <Text className="mt-2 text-xl font-medium">{nombre}</Text>
                 <Text className="text-xl font-medium">Habitación {habitacion}</Text>
                 <View className="w-full mt-6">
-                    <View
-                        className="flex-col w-full h-20 bg-white rounded-t-xl items-center p-4 border-t border-x border-gray-300">
+                    <View className="flex-col w-full h-20 bg-white rounded-t-xl items-center p-4 border-t border-x border-gray-300">
                         <View className="flex-row w-full">
                             <CalendarArrowUp/>
                             <Text className="text-[16px] ml-2">Check-in</Text>
@@ -133,8 +111,7 @@ export function ProfileScreen() {
                         </Text>
                     </View>
                     <Separador/>
-                    <View
-                        className="flex-col w-full h-20 bg-white rounded-b-xl items-center p-4 border-b border-x border-gray-300">
+                    <View className="flex-col w-full h-20 bg-white rounded-b-xl items-center p-4 border-b border-x border-gray-300">
                         <View className="flex-row w-full">
                             <CalendarArrowDown/>
                             <Text className="text-[16px] ml-2">Check-out</Text>
@@ -144,7 +121,6 @@ export function ProfileScreen() {
                         </Text>
                     </View>
                 </View>
-
                 <View className="w-full mt-6">
                     <FilaAccion
                         icono={<Phone/>}
@@ -166,9 +142,7 @@ export function ProfileScreen() {
                         className="rounded-b-xl border-b border-x border-gray-300"
                     />
                 </View>
-
             </View>
-            <BottomBarComponent activeTab="Perfil" onTabPress={handleTabPress}/>
         </SafeAreaView>
     );
 }

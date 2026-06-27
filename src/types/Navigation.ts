@@ -1,12 +1,6 @@
 export type RootStackParamList = {
   Login: undefined;
-  Menu: { categoriaId?: number } | undefined;
-  MenuDetail: {
-    submenuId: number;
-    submenuName: string;
-  };
-  Home: undefined;
-  Profile: undefined;
+  Main: undefined;          // ← contiene Home, Menu, Profile, Order, MenuDetails
 };
 
 

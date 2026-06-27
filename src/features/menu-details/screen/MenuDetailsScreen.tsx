@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {ActivityIndicator, SafeAreaView, ScrollView, View} from "react-native";
+import {ActivityIndicator, ScrollView, View} from "react-native";
+import {SafeAreaView} from 'react-native-safe-area-context';
 import ToolBarComponent from "@/shared/components/ToolBarComponent";
 import {RouteProp} from "@react-navigation/core";
 import {RootStackParamList} from "@/types/Navigation";
@@ -17,11 +18,13 @@ type MenuDetailRouteProp = RouteProp<RootStackParamList, 'MenuDetail'>;
 type MenuDetailNavigationProp = StackNavigationProp<RootStackParamList, 'MenuDetail'>;
 
 interface Props {
-    route: MenuDetailRouteProp;
+    submenuId: number;
+    submenuName: string;
+    onBack: () => void;
 }
 
-export const MenuDetailsScreen = ({route}: Props) => {
-
+export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
+    const [selectedEtiquetaId, setSelectedEtiquetaId] = useState<number>(0);
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(3);
     const [cart, setCart] = useState<Record<string, number>>({});
@@ -30,14 +33,14 @@ export const MenuDetailsScreen = ({route}: Props) => {
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState<MenuItem[]>([]);
     const [etiquetas, setEtiquetas] = useState<Etiqueta[]>([]);
-    const {submenuId, submenuName} = route.params;
+    const navigation = useNavigation<MenuDetailNavigationProp>();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [items, etiquetas] = await Promise.all([
-                    getMenuItem({ mecaId: submenuId }),
-                    getEtiquetas({ mecaId: submenuId, consultaPorCategoria: true}),
+                    getMenuItem({mecaId: submenuId}),
+                    getEtiquetas({mecaId: submenuId, consultaPorCategoria: true}),
                 ]);
                 setItems(items);
                 setEtiquetas(etiquetas);
@@ -51,13 +54,8 @@ export const MenuDetailsScreen = ({route}: Props) => {
     }, []);
 
     const handleIncrease = (dishId: number) => {
-        setCart(prev => ({
-            ...prev,
-            [dishId]: (prev[dishId] || 0) + 1,
-        }));
+        setCart(prev => ({...prev, [dishId]: (prev[dishId] || 0) + 1}));
     };
-
-    const navigation = useNavigation<MenuDetailNavigationProp>();
 
     const handleDecrease = (dishId: number) => {
         setCart(prev => {
@@ -67,14 +65,13 @@ export const MenuDetailsScreen = ({route}: Props) => {
                 delete updatedCart[dishId];
                 return updatedCart;
             }
-            return {
-                ...prev,
-                [dishId]: currentQuantity - 1,
-            };
+            return {...prev, [dishId]: currentQuantity - 1};
         });
     };
 
-
+    const itemsFiltrados = selectedEtiquetaId === 0
+        ? items
+        : items.filter(item => item.etiquetas?.some(e => e.etiqId === selectedEtiquetaId));
 
     const handleOpenDish = (dish: MenuItem) => {
         setSelectedDish({...dish, quantity: cart[dish.meitId] || 0});
@@ -84,10 +81,7 @@ export const MenuDetailsScreen = ({route}: Props) => {
     const handleBottomSheetQuantityChange = useCallback((quantity: number) => {
         setSelectedDish((prev) => {
             if (prev) {
-                setCart(cartPrev => ({
-                    ...cartPrev,
-                    [prev.meitId]: quantity,
-                }));
+                setCart(cartPrev => ({...cartPrev, [prev.meitId]: quantity}));
                 return {...prev, quantity};
             }
             return prev;
@@ -95,25 +89,20 @@ export const MenuDetailsScreen = ({route}: Props) => {
     }, []);
 
     const handleSelectBack = () => {
-        navigation.replace('Menu');
+        onBack();
     };
-
-    console.log("submenuId ", submenuId);
-    console.log("submenuName ", submenuName);
-    console.log("cart", cart);
-    console.log("items ", items);
 
     if (loading) {
         return (
-            <SafeAreaView className="flex-1 justify-center items-center">
+            <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <ActivityIndicator size="large"/>
             </SafeAreaView>
         );
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-stone-100">
-            <View className="flex-1">
+        <SafeAreaView style={{flex: 1}} className="bg-stone-100">
+            <View style={{flex: 1}}>
                 <ToolBarComponent
                     searchValue={search}
                     onChangeSearch={setSearch}
@@ -126,40 +115,28 @@ export const MenuDetailsScreen = ({route}: Props) => {
                 <LabelCarouselComponent
                     etiqueta={etiquetas}
                     defaultSelectedId={0}
+                    onSelectEtiqueta={setSelectedEtiquetaId}
                 />
                 <ScrollView
-                    className="flex-1 h-full"
+                    style={{flex: 1}}
                     showsVerticalScrollIndicator={true}
                     decelerationRate="normal"
-                    contentContainerStyle={{
-                        padding: 16,
-                        overflow: 'scroll'
-                    }}
+                    contentContainerStyle={{padding: 16}}
                     scrollEventThrottle={16}
                 >
-                    {items.map((item: MenuItem) => (
-                        <View
-                            key={item.meitId}
-                            className="mb-4"
-                        >
+                    {itemsFiltrados.map((item: MenuItem) => (
+                        <View key={item.meitId} className="mb-4">
                             <CardComponent
                                 item={item}
                                 hideDescription={false}
                                 quantity={cart[item.meitId] || 0}
-                                onIncrease={() =>
-                                    handleIncrease(item.meitId)
-                                }
-                                onDecrease={() =>
-                                    handleDecrease(item.meitId)
-                                }
-                                onPress={() =>
-                                    handleOpenDish(item)
-                                }
+                                onIncrease={() => handleIncrease(item.meitId)}
+                                onDecrease={() => handleDecrease(item.meitId)}
+                                onPress={() => handleOpenDish(item)}
                             />
                         </View>
                     ))}
                 </ScrollView>
-
                 <BottomSheetComponent
                     visible={modalVisible}
                     item={selectedDish}

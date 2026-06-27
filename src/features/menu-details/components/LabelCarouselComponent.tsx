@@ -9,20 +9,27 @@ import {Etiqueta} from "@/types/Etiqueta";
 
 interface LabelProps {
     etiqueta: Etiqueta[];
-    defaultSelectedId: number;
+    defaultSelectedId?: number;
+    onSelectEtiqueta?: (etiqId: number) => void;
 }
+
+const TODOS_ID = 0;
 
 export default function LabelCarouselComponent({
                                                    etiqueta,
                                                    defaultSelectedId,
+                                                   onSelectEtiqueta,
                                                }: Readonly<LabelProps>) {
 
-    const [selectedId, setSelectedId] = useState(defaultSelectedId);
+    const [selectedId, setSelectedId] = useState(defaultSelectedId ?? TODOS_ID);
 
-    const handlePress = (etiqueta: Etiqueta) => {
-        setSelectedId(etiqueta.etiqId);
-        console.log('Label seleccionado:', etiqueta);
+    const handlePress = (id: number) => {
+        setSelectedId(id);
+        onSelectEtiqueta?.(id);
     };
+
+    const todas = [{etiqId: TODOS_ID, etiqNombre: 'Todos'}];
+    const lista = [...todas, ...etiqueta];
 
     return (
         <View className="my-4">
@@ -31,17 +38,16 @@ export default function LabelCarouselComponent({
                 showsHorizontalScrollIndicator={false}
                 contentContainerClassName="px-4 gap-2"
             >
-                {etiqueta.map((etiqueta) => {
-                    const selected = etiqueta.etiqId === selectedId;
-
+                {lista.map((e) => {
+                    const selected = e.etiqId === selectedId;
                     return (
                         <Pressable
-                            key={etiqueta.etiqId}
-                            onPress={() => handlePress(etiqueta)}
+                            key={e.etiqId}
+                            onPress={() => handlePress(e.etiqId)}
                             className={`px-4 py-2 rounded-full ${selected ? 'bg-black' : 'bg-gray-300'}`}
                         >
                             <Text className={selected ? 'text-white' : 'text-black'}>
-                                {etiqueta.etiqNombre}
+                                {e.etiqNombre}
                             </Text>
                         </Pressable>
                     );

@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
-import CardCarouselComponent from './CardCarouselComponent';
+import CarouselCardComponent from './CarouselCardComponent';
 import {Item} from "@/types/Item";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -44,7 +44,7 @@ export default function CarouselComponent({title, data}: Readonly<CarouselCompon
                     const isLast = index === data.length - 1;
                     return (
                         <View key={dish.id} style={{width: CARD_WIDTH}} className={isLast ? 'mr-0' : 'mr-4'}>
-                            <CardCarouselComponent title={dish.title} image={dish.image} price={dish.price}/>
+                            <CarouselCardComponent title={dish.title} image={dish.image} price={dish.price}/>
                         </View>
                     );
                 })}

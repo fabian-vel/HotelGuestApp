@@ -1,35 +1,20 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator} from "react-native";
-import {useNavigation} from "@react-navigation/native";
-import {StackNavigationProp} from "@react-navigation/stack";
-import {RootStackParamList} from "@/types/Navigation";
-import {BottomBarComponent, BottomBarTab} from "@/shared/components/BottomBarComponent";
+import {View, Text, TouchableOpacity, ActivityIndicator} from "react-native";
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {SpecialDishCardComponent} from "@/features/home/components/SpecialDishCardComponent";
 import {Wine, HandPlatter, ChevronRight} from "lucide-react-native";
 import {useCategoriaStore} from "@/shared/store/categoriaStore";
 
-type HomeNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+interface HomeScreenProps {
+    onNavigateMenu?: (categoriaId?: number) => void;
+}
 
-export function HomeScreen() {
-    const navigation = useNavigation<HomeNavigationProp>();
+export function HomeScreen({ onNavigateMenu }: Readonly<HomeScreenProps>) {
     const { categorias, loading, fetchCategorias } = useCategoriaStore();
 
     useEffect(() => {
         fetchCategorias();
     }, []);
-
-    const handleTabPress = (tab: BottomBarTab) => {
-        switch (tab) {
-            case 'Inicio': break;
-            case 'Menu':
-                navigation.replace('Menu', {});
-                break;
-            case 'Pedidos':
-            case 'Perfil':
-                navigation.replace('Profile');
-                break;
-        }
-    };
 
     if (loading) {
         return (
@@ -40,7 +25,7 @@ export function HomeScreen() {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fcf8f6' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#fcf8f6' }} edges={['top', 'left', 'right']}>
             <View style={{ flex: 1 }} className="p-6">
                 <Text className="text-2xl font-serif font-bold text-stone-900 tracking-wide">
                     Hola Juan
@@ -59,7 +44,7 @@ export function HomeScreen() {
                         <TouchableOpacity
                             key={categoria.mecaId}
                             className="flex-col items-center justify-center bg-white rounded-lg p-4 w-32 h-32"
-                            onPress={() => navigation.replace('Menu', { categoriaId: categoria.mecaId })} // ← filtra por categoría
+                            onPress={() => onNavigateMenu?.(categoria.mecaId)}
                         >
                             {categoria.mecaId === 1
                                 ? <HandPlatter size={35} color="#75624a" />
@@ -84,7 +69,6 @@ export function HomeScreen() {
                     </TouchableOpacity>
                 </View>
             </View>
-            <BottomBarComponent activeTab="Inicio" onTabPress={handleTabPress} />
         </SafeAreaView>
     );
 }

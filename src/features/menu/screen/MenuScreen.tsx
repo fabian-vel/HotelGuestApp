@@ -1,23 +1,22 @@
 import React, {useState, useEffect} from 'react';
-import {View, SafeAreaView, ActivityIndicator, ScrollView} from 'react-native';
+import {View, ActivityIndicator, ScrollView} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import ToolBarComponent from '../../../shared/components/ToolBarComponent';
 import AccordionComponent from "@/features/menu/components/AccordionComponent";
-import {RootStackParamList} from "@/types/Navigation";
-import {StackNavigationProp} from "@react-navigation/stack";
-import {useNavigation} from "@react-navigation/native";
 import {getCategoryImage} from "@/shared/util/imageMap";
-import {BottomBarComponent, BottomBarTab} from "@/shared/components/BottomBarComponent";
 import {useCategoriaStore} from "@/shared/store/categoriaStore";
+import {Submenu} from "@/types/Submenu";
 
-type MenuNavigationProp = StackNavigationProp<RootStackParamList, 'Menu'>;
+interface MenuScreenProps {
+    categoriaId?: number;
+    onSelectSubmenu: (submenu: Submenu) => void;
+}
 
-export default function MenuScreen({ route }: Readonly<{ route: any }>) {
+export default function MenuScreen({categoriaId, onSelectSubmenu}: Readonly<MenuScreenProps>) {
+
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(3);
-    const categoriaId = route?.params?.categoriaId;
-    const { categorias, loading, fetchCategorias } = useCategoriaStore();
-
-    const navigation = useNavigation<MenuNavigationProp>();
+    const {categorias, loading, fetchCategorias} = useCategoriaStore();
 
     useEffect(() => {
         fetchCategorias();
@@ -27,34 +26,17 @@ export default function MenuScreen({ route }: Readonly<{ route: any }>) {
         ? categorias.filter(c => c.mecaId === categoriaId)
         : categorias;
 
-    const handleSelectSubmenu = (submenuId: number, submenuName: string) => {
-        navigation.replace('MenuDetail', {submenuId, submenuName});
-    };
-
-    const handleTabPress = (tab: BottomBarTab) => {
-        switch (tab) {
-            case 'Inicio':
-                navigation.replace('Home');
-                break;
-            case 'Menu': break;
-            case 'Pedidos':
-            case 'Perfil':
-                navigation.replace('Profile');
-                break;
-        }
-    };
-
     if (loading) {
         return (
-            <SafeAreaView className="flex-1 justify-center items-center">
+            <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <ActivityIndicator size="large"/>
             </SafeAreaView>
         );
     }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <View style={{ flex: 1 }}>
+        <SafeAreaView style={{flex: 1}} edges={['top', 'left', 'right']}>
+            <View style={{flex: 1}}>
                 <ToolBarComponent
                     searchValue={search}
                     onChangeSearch={setSearch}
@@ -63,13 +45,13 @@ export default function MenuScreen({ route }: Readonly<{ route: any }>) {
                     showBackButton={false}
                     title={"Menú"}
                 />
-                <ScrollView style={{ flex: 1 }}>
+                <ScrollView style={{flex: 1}}>
                     {categoriasFiltradas.map((categoria) => (
                         <AccordionComponent
                             key={categoria.mecaId}
                             title={categoria.mecaNombre}
                             LocalImageTitle={getCategoryImage(categoria.mecaId, categoria.mecaImagenUrl)}
-                            onSelectSubmenu={handleSelectSubmenu}
+                            onSelectSubmenu={onSelectSubmenu}
                             list={categoria.subCategorias.map((sub) => ({
                                 id: sub.mecaId,
                                 label: sub.mecaNombre,
@@ -79,7 +61,6 @@ export default function MenuScreen({ route }: Readonly<{ route: any }>) {
                     ))}
                 </ScrollView>
             </View>
-            <BottomBarComponent activeTab="Menu" onTabPress={handleTabPress} />
         </SafeAreaView>
     );
 }

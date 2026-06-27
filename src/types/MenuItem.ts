@@ -1,3 +1,5 @@
+import {Etiqueta} from "@/types/Etiqueta";
+
 export interface MenuItem {
     meitId: number,
     meitNombre: string,
@@ -6,5 +8,6 @@ export interface MenuItem {
     meitImagenUrl?: string,
     mecaId: number,
     mecaParentId: number,
-    quantity?: number;
+    quantity?: number,
+    etiquetas: Etiqueta[],
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, Text, Alert } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import LoginForm from '../components/LoginForm';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -19,10 +20,10 @@ export default function LoginScreen() {
         try {
             const response = await login(habitacion, codigo);
             await saveToken(response.token);
-            navigation.replace('Home');
+            navigation.replace('Main');
         } catch (error: any) {
             const message = error.response?.data?.message ?? 'Error al iniciar sesión';
-            //Alert.alert('Error', message);
+            Alert.alert('Error', error?.message ?? 'Error al iniciar sesión');
         } finally {
             setLoading(false);
         }
