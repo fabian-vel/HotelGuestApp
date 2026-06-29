@@ -38,7 +38,7 @@ export function BottomSheetComponent({
 
     useEffect(() => {
         if (visible) {
-            const initialQty = (item?.quantity && item.quantity > 0) ? item.quantity : 1;
+            const initialQty = item?.quantity ?? 0;
             setQuantity(initialQty);
             onQuantityChange?.(initialQty);
         }
@@ -60,7 +60,7 @@ export function BottomSheetComponent({
 
     const handleDecrease = () => {
         setQuantity((prev) => {
-            const next = prev > 1 ? prev - 1 : 1;
+            const next = prev > 0 ? prev - 1 : 0;
             onQuantityChange?.(next);
             return next;
         });

@@ -48,7 +48,7 @@ export default function CardComponent({
                 </View>
             </TouchableOpacity>
 
-            <View className="absolute bottom-3 right-32 mr-2">
+            <View className="absolute bottom-3 right-32 mr-3">
                 <TouchableOpacity activeOpacity={1} onPress={() => {}}>
                     <QuantitySelectorComponent
                         quantity={quantity}

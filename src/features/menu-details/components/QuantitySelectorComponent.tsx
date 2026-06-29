@@ -19,7 +19,8 @@ export default function QuantitySelectorComponent({
             <View className="flex-row justify-center w-20">
                 <TouchableOpacity
                     onPress={onIncrease}
-                    className="w-10 h-8 border border-gray-300 rounded-full items-center justify-center"
+                    className="w-10 h-8 rounded-full items-center justify-center"
+                    style={{ backgroundColor: '#f0f0f0', borderWidth: 1, borderColor: '#d1d5db' }}
                 >
                     <Plus size={16} color="#000" />
                 </TouchableOpacity>
