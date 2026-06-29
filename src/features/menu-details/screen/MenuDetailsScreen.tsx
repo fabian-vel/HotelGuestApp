@@ -3,7 +3,6 @@ import {ActivityIndicator, ScrollView, View} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ToolBarComponent from "@/shared/components/ToolBarComponent";
 import CardComponent from "@/features/menu-details/components/CardComponent";
-import {BottomSheetComponent} from "@/features/menu-details/components/BottomSheetComponent";
 import LabelCarouselComponent from "@/features/menu-details/components/LabelCarouselComponent";
 import {getMenuItem} from "@/features/menu-details/service/MenuItemService";
 import {getTags} from "@/features/menu-details/service/EtiquetaService";
@@ -11,6 +10,8 @@ import {MenuItem} from "@/types/MenuItem";
 import {Tag} from "@/types/Tag";
 import {AlertComponent} from "@/shared/components/AlertComponent";
 import {AlertState} from "@/types/AlertState";
+import {ItemDetailSheetComponent} from "@/features/menu-details/components/ItemDetailSheetComponent";
+import {useCartStore} from "@/shared/store/cartStore";
 
 interface Props {
     submenuId: number;
@@ -29,6 +30,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
     const [items, setItems] = useState<MenuItem[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
     const [alert, setAlert] = useState<AlertState>({visible: false});
+    const {add, items: cartItems} = useCartStore();
 
     const loadData = async () => {
         try {
@@ -59,20 +61,14 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
         loadData();
     }, []);
 
-    const handleIncrease = (dishId: number) => {
-        setCart(prev => ({...prev, [dishId]: (prev[dishId] || 0) + 1}));
+    const handleIncrease = (item: MenuItem) => {
+        const current = cartItems[item.meitId]?.cantidad ?? 0;
+        add(item, current + 1);
     };
 
-    const handleDecrease = (dishId: number) => {
-        setCart(prev => {
-            const currentQuantity = prev[dishId] || 0;
-            if (currentQuantity <= 1) {
-                const updatedCart = {...prev};
-                delete updatedCart[dishId];
-                return updatedCart;
-            }
-            return {...prev, [dishId]: currentQuantity - 1};
-        });
+    const handleDecrease = (item: MenuItem) => {
+        const current = cartItems[item.meitId]?.cantidad ?? 0;
+        add(item, current - 1);
     };
 
     const itemsFiltrados = selectedEtiquetaId === 0
@@ -135,19 +131,18 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
                             <CardComponent
                                 item={item}
                                 hideDescription={false}
-                                quantity={cart[item.meitId] || 0}
-                                onIncrease={() => handleIncrease(item.meitId)}
-                                onDecrease={() => handleDecrease(item.meitId)}
+                                quantity={cartItems[item.meitId]?.cantidad ?? 0}
+                                onIncrease={() => handleIncrease(item)}
+                                onDecrease={() => handleDecrease(item)}
                                 onPress={() => handleOpenDish(item)}
                             />
                         </View>
                     ))}
                 </ScrollView>
-                <BottomSheetComponent
+                <ItemDetailSheetComponent
                     visible={modalVisible}
                     item={selectedItem}
                     onClose={() => setModalVisible(false)}
-                    onQuantityChange={handleBottomSheetQuantityChange}
                 />
             </View>
             <AlertComponent {...alert}/>
