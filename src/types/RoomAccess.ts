@@ -1,4 +1,4 @@
-export interface HabitacionAcceso {
+export interface RoomAccess {
     haacId: number;
     haacHabitacion: string;
     haacCodigo: string;

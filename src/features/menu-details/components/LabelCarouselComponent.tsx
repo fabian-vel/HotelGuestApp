@@ -5,31 +5,31 @@ import {
     ScrollView,
     Pressable,
 } from 'react-native';
-import {Etiqueta} from "@/types/Etiqueta";
+import {Tag} from "@/types/Tag";
 
 interface LabelProps {
-    etiqueta: Etiqueta[];
+    tags: Tag[];
     defaultSelectedId?: number;
     onSelectEtiqueta?: (etiqId: number) => void;
 }
 
-const TODOS_ID = 0;
+const ALL_ID = 0;
 
 export default function LabelCarouselComponent({
-                                                   etiqueta,
+                                                   tags,
                                                    defaultSelectedId,
                                                    onSelectEtiqueta,
                                                }: Readonly<LabelProps>) {
 
-    const [selectedId, setSelectedId] = useState(defaultSelectedId ?? TODOS_ID);
+    const [selectedId, setSelectedId] = useState(defaultSelectedId ?? ALL_ID);
 
     const handlePress = (id: number) => {
         setSelectedId(id);
         onSelectEtiqueta?.(id);
     };
 
-    const todas = [{etiqId: TODOS_ID, etiqNombre: 'Todos'}];
-    const lista = [...todas, ...etiqueta];
+    const all = [{etiqId: ALL_ID, etiqNombre: 'Todos'}];
+    const listTags = [...all, ...tags];
 
     return (
         <View className="my-4">
@@ -38,7 +38,7 @@ export default function LabelCarouselComponent({
                 showsHorizontalScrollIndicator={false}
                 contentContainerClassName="px-4 gap-2"
             >
-                {lista.map((e) => {
+                {listTags.map((e) => {
                     const selected = e.etiqId === selectedId;
                     return (
                         <Pressable

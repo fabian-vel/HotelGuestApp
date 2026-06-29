@@ -53,7 +53,7 @@ export function MainNavigator() {
             case 'Inicio':  return <HomeScreen onNavigateMenu={handleNavigateMenu}/>;
             case 'Menu': return (
                 <MenuScreen
-                    categoriaId={categoriaId}
+                    categoryId={categoriaId}
                     onSelectSubmenu={setSubmenu}
                 />
             );

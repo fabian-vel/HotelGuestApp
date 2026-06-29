@@ -3,8 +3,8 @@ import {Text, View, ActivityIndicator, TouchableOpacity} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {CalendarArrowDown, CalendarArrowUp, Phone, LogOut, ChevronRight, ReceiptText} from "lucide-react-native";
 import {getTokenPayload} from "@/shared/util/jwtUtil";
-import {getFechaAcceso} from "@/features/profile/service/AccessDateService";
-import {HabitacionAcceso} from "@/types/HabitacionAcceso";
+import {getAccessDate} from "@/features/profile/service/AccessDateService";
+import {RoomAccess} from "@/types/RoomAccess";
 import {useAuthStore} from "@/features/auth/store/authStore";
 import {AlertState} from "@/types/AlertState";
 import {AlertComponent} from "@/shared/components/AlertComponent";
@@ -56,7 +56,7 @@ interface ProfileScreenProps {
 export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
     const [habitacion, setHabitacion] = useState<string | null>(null);
     const [nombre, setNombre] = useState<string | null>(null);
-    const [acceso, setAcceso] = useState<HabitacionAcceso | null>(null);
+    const [acceso, setAcceso] = useState<RoomAccess | null>(null);
     const [iniciales, setIniciales] = useState<string>('');
     const [loading, setLoading] = useState(true);
     const clearToken = useAuthStore((state) => state.clearToken);
@@ -74,7 +74,7 @@ export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
                 setHabitacion(payload.sub);
                 setNombre(payload.clienteNombre);
                 setIniciales(getIniciales(payload.clienteNombre));
-                const data = await getFechaAcceso({haacId: payload.accesoId});
+                const data = await getAccessDate({haacId: payload.accesoId});
                 setAcceso(data);
             }
         } catch (error: any) {

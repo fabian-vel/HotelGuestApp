@@ -4,28 +4,28 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import ToolBarComponent from '../../../shared/components/ToolBarComponent';
 import AccordionComponent from "@/features/menu/components/AccordionComponent";
 import {getCategoryImage} from "@/shared/util/imageMap";
-import {useCategoriaStore} from "@/shared/store/categoriaStore";
+import {useCategoriesStore} from "@/shared/store/categoryStore";
 import {Submenu} from "@/types/Submenu";
 import {AlertComponent} from "@/shared/components/AlertComponent";
 
 interface MenuScreenProps {
-    categoriaId?: number;
+    categoryId?: number;
     onSelectSubmenu: (submenu: Submenu) => void;
 }
 
-export default function MenuScreen({categoriaId, onSelectSubmenu}: Readonly<MenuScreenProps>) {
+export default function MenuScreen({categoryId, onSelectSubmenu}: Readonly<MenuScreenProps>) {
 
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(3);
-    const {categorias, loading, fetchCategorias, error} = useCategoriaStore();
+    const {categories, loading, fetchCategories, error} = useCategoriesStore();
 
     useEffect(() => {
-        fetchCategorias();
+        fetchCategories();
     }, []);
 
-    const categoriasFiltradas = categoriaId
-        ? categorias.filter(c => c.mecaId === categoriaId)
-        : categorias;
+    const filteredCategories = categoryId
+        ? categories.filter(c => c.mecaId === categoryId)
+        : categories;
 
     if (loading) {
         return (
@@ -47,7 +47,7 @@ export default function MenuScreen({categoriaId, onSelectSubmenu}: Readonly<Menu
                     title={"Menú"}
                 />
                 <ScrollView style={{flex: 1}}>
-                    {categoriasFiltradas.map((categoria) => (
+                    {filteredCategories.map((categoria) => (
                         <AccordionComponent
                             key={categoria.mecaId}
                             title={categoria.mecaNombre}
@@ -67,7 +67,7 @@ export default function MenuScreen({categoriaId, onSelectSubmenu}: Readonly<Menu
                 alertType="error"
                 title="Error"
                 message={error ?? 'Error inesperado'}
-                onAccept={() => useCategoriaStore.setState({error: null})}
+                onAccept={() => useCategoriesStore.setState({error: null})}
             />
         </SafeAreaView>
     );

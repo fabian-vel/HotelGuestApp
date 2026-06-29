@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity, ActivityIndicator} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SpecialDishCardComponent} from "@/features/home/components/SpecialDishCardComponent";
 import {Wine, HandPlatter, ChevronRight} from "lucide-react-native";
-import {useCategoriaStore} from "@/shared/store/categoriaStore";
+import {useCategoriesStore} from "@/shared/store/categoryStore";
 import {AlertComponent} from "@/shared/components/AlertComponent";
 
 interface HomeScreenProps {
@@ -11,10 +11,10 @@ interface HomeScreenProps {
 }
 
 export function HomeScreen({onNavigateMenu}: Readonly<HomeScreenProps>) {
-    const {categorias, loading, fetchCategorias, error} = useCategoriaStore();
+    const {categories, loading, fetchCategories, error} = useCategoriesStore();
 
     useEffect(() => {
-        fetchCategorias();
+        fetchCategories();
     }, []);
 
     if (loading) {
@@ -41,17 +41,17 @@ export function HomeScreen({onNavigateMenu}: Readonly<HomeScreenProps>) {
                     Explorar
                 </Text>
                 <View className="flex-row items-center justify-evenly">
-                    {categorias.map(categoria => (
+                    {categories.map(category => (
                         <TouchableOpacity
-                            key={categoria.mecaId}
+                            key={category.mecaId}
                             className="flex-col items-center justify-center bg-white rounded-lg p-4 w-32 h-32"
-                            onPress={() => onNavigateMenu?.(categoria.mecaId)}
+                            onPress={() => onNavigateMenu?.(category.mecaId)}
                         >
-                            {categoria.mecaId === 1
+                            {category.mecaId === 1
                                 ? <HandPlatter size={35} color="#75624a"/>
                                 : <Wine size={35} color="#75624a"/>
                             }
-                            <Text className="mt-4 font-bold">{categoria.mecaNombre}</Text>
+                            <Text className="mt-4 font-bold">{category.mecaNombre}</Text>
                             <Text className="mt-1 text-[#75624a]">Ver menú</Text>
                         </TouchableOpacity>
                     ))}
@@ -75,7 +75,7 @@ export function HomeScreen({onNavigateMenu}: Readonly<HomeScreenProps>) {
                 alertType="error"
                 title="Error"
                 message={error ?? 'Error inesperado'}
-                onAccept={() => useCategoriaStore.setState({error: null})}
+                onAccept={() => useCategoriesStore.setState({error: null})}
             />
         </SafeAreaView>
     );

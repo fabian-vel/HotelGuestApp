@@ -6,9 +6,9 @@ import CardComponent from "@/features/menu-details/components/CardComponent";
 import {BottomSheetComponent} from "@/features/menu-details/components/BottomSheetComponent";
 import LabelCarouselComponent from "@/features/menu-details/components/LabelCarouselComponent";
 import {getMenuItem} from "@/features/menu-details/service/MenuItemService";
-import {getEtiquetas} from "@/features/menu-details/service/EtiquetaService";
+import {getTags} from "@/features/menu-details/service/EtiquetaService";
 import {MenuItem} from "@/types/MenuItem";
-import {Etiqueta} from "@/types/Etiqueta";
+import {Tag} from "@/types/Tag";
 import {AlertComponent} from "@/shared/components/AlertComponent";
 import {AlertState} from "@/types/AlertState";
 
@@ -24,21 +24,21 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
     const [notifications, setNotifications] = useState(3);
     const [cart, setCart] = useState<Record<string, number>>({});
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedDish, setSelectedDish] = useState<MenuItem | null>(null);
+    const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState<MenuItem[]>([]);
-    const [etiquetas, setEtiquetas] = useState<Etiqueta[]>([]);
+    const [tags, setTags] = useState<Tag[]>([]);
     const [alert, setAlert] = useState<AlertState>({visible: false});
 
     const loadData = async () => {
         try {
-            const [items, etiquetas] = await Promise.all([
+            const [items, tags] = await Promise.all([
                 getMenuItem({ mecaId: submenuId }),
-                getEtiquetas({ mecaId: submenuId, consultaPorCategoria: true }),
+                getTags({ mecaId: submenuId, consultaPorCategoria: true }),
             ]);
 
             setItems(items);
-            setEtiquetas(etiquetas);
+            setTags(tags);
         } catch (error: any) {
             setAlert({
                 visible: true,
@@ -80,12 +80,12 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
         : items.filter(item => item.etiquetas?.some(e => e.etiqId === selectedEtiquetaId));
 
     const handleOpenDish = (dish: MenuItem) => {
-        setSelectedDish({...dish, quantity: cart[dish.meitId] || 0});
+        setSelectedItem({...dish, quantity: cart[dish.meitId] || 0});
         setModalVisible(true);
     };
 
     const handleBottomSheetQuantityChange = useCallback((quantity: number) => {
-        setSelectedDish((prev) => {
+        setSelectedItem((prev) => {
             if (prev) {
                 setCart(cartPrev => ({...cartPrev, [prev.meitId]: quantity}));
                 return {...prev, quantity};
@@ -119,7 +119,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
                     title={submenuName}
                 />
                 <LabelCarouselComponent
-                    etiqueta={etiquetas}
+                    tags={tags}
                     defaultSelectedId={0}
                     onSelectEtiqueta={setSelectedEtiquetaId}
                 />
@@ -145,7 +145,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
                 </ScrollView>
                 <BottomSheetComponent
                     visible={modalVisible}
-                    item={selectedDish}
+                    item={selectedItem}
                     onClose={() => setModalVisible(false)}
                     onQuantityChange={handleBottomSheetQuantityChange}
                 />

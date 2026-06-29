@@ -1,7 +1,7 @@
 import axiosInstance from '../../../shared/api/authInterceptor';
-import {MenuCategoria} from "@/types/MenuCategoria";
+import {MenuCategory} from "@/types/MenuCategory";
 
-export const getCategory = async (): Promise<MenuCategoria[]> => {
+export const getCategory = async (): Promise<MenuCategory[]> => {
     const response = await axiosInstance.get('/categorias');
     return response.data.data;
 };

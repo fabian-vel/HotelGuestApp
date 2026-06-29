@@ -1,4 +1,4 @@
-import {Etiqueta} from "@/types/Etiqueta";
+import {Tag} from "@/types/Tag";
 
 export interface MenuItem {
     meitId: number,
@@ -9,5 +9,5 @@ export interface MenuItem {
     mecaId: number,
     mecaParentId: number,
     quantity?: number,
-    etiquetas: Etiqueta[],
+    etiquetas: Tag[],
 }

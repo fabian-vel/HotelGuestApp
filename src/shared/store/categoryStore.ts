@@ -1,25 +1,25 @@
 import { create } from 'zustand';
-import { MenuCategoria } from '@/types/MenuCategoria';
+import { MenuCategory } from '@/types/MenuCategory';
 import { getCategory } from '@/features/menu/service/MenuService';
 
 interface CategoriaState {
-    categorias: MenuCategoria[];
+    categories: MenuCategory[];
     loading: boolean;
     error: string | null;
-    fetchCategorias: () => Promise<void>;
+    fetchCategories: () => Promise<void>;
 }
 
-export const useCategoriaStore = create<CategoriaState>((set, get) => ({
-    categorias: [],
+export const useCategoriesStore = create<CategoriaState>((set, get) => ({
+    categories: [],
     loading: false,
     error: null,
 
-    fetchCategorias: async () => {
-        if (get().categorias.length > 0) return;
+    fetchCategories: async () => {
+        if (get().categories.length > 0) return;
         set({ loading: true });
         try {
             const data = await getCategory();
-            set({ categorias: data });
+            set({ categories: data });
         } catch (error: any) {
             set({ error: error?.message ?? 'Error inesperado' });
         } finally {
