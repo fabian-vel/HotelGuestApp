@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from "react-native";
-import {House, NotebookPen, ShoppingCart, User} from "lucide-react-native";
+import {House, NotebookPen, ShoppingBag, User} from "lucide-react-native";
 
 export type BottomBarTab = 'Inicio' | 'Menu' | 'Pedidos' | 'Perfil';
 
@@ -37,7 +37,7 @@ export function BottomBarComponent({ activeTab, onTabPress }: Readonly<BottomBar
                 className="flex-1 items-center justify-center"
                 onPress={() => onTabPress('Pedidos')}
             >
-                <ShoppingCart color={getColor('Pedidos')} />
+                <ShoppingBag color={getColor('Pedidos')} />
                 <Text style={{ color: getColor('Pedidos'), fontSize: 11 }}>Pedidos</Text>
             </TouchableOpacity>
 

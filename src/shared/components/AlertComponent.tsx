@@ -1,11 +1,11 @@
 import React from "react";
 import {Modal, Text, TouchableOpacity, View} from "react-native";
-import {CircleCheck, CircleAlert, CircleX, Info} from 'lucide-react-native';
+import {CircleCheck, CircleAlert, CircleX, Info, CircleHelp} from 'lucide-react-native';
 import {AlertState} from "@/types/AlertState";
 
 export function AlertComponent({
                                    visible,
-                                   alertType = 'info',
+                                   alertType = 'success',
                                    title,
                                    message,
                                    onAccept,
@@ -17,10 +17,10 @@ export function AlertComponent({
     const COLOR_ICON = '#ffffff';
 
     const icon = {
-        success: <CircleCheck size={SIZE_ICON} color={COLOR_ICON} fill="#22C55E"/>,
-        error:   <CircleX     size={SIZE_ICON} color={COLOR_ICON} fill="#EF4444"/>,
-        warning: <CircleAlert size={SIZE_ICON} color={COLOR_ICON} fill="#F59E0B"/>,
-        info:    <Info        size={SIZE_ICON} color={COLOR_ICON} fill="#3B82F6"/>,
+        success:  <CircleCheck size={SIZE_ICON} color={COLOR_ICON} fill="#22C55E"/>,
+        error:    <CircleX     size={SIZE_ICON} color={COLOR_ICON} fill="#EF4444"/>,
+        warning:  <CircleAlert size={SIZE_ICON} color={COLOR_ICON} fill="#F59E0B"/>,
+        question: <CircleHelp  size={SIZE_ICON} color={COLOR_ICON} fill="#3B82F6"/>,
     }[alertType];
 
     return (

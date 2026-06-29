@@ -1,13 +1,15 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Text, View, ActivityIndicator, TouchableOpacity} from "react-native";
+import {Text, View, ActivityIndicator} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {CalendarArrowDown, CalendarArrowUp, Phone, LogOut, ChevronRight, ReceiptText} from "lucide-react-native";
+import {CalendarArrowDown, CalendarArrowUp, Phone, LogOut, ReceiptText} from "lucide-react-native";
 import {getTokenPayload} from "@/shared/util/jwtUtil";
 import {getAccessDate} from "@/features/profile/service/AccessDateService";
 import {RoomAccess} from "@/types/RoomAccess";
 import {useAuthStore} from "@/features/auth/store/authStore";
 import {AlertState} from "@/types/AlertState";
 import {AlertComponent} from "@/shared/components/AlertComponent";
+import {SeparatorComponent} from "@/shared/components/SeparatorComponent";
+import {ActionPanelComponent} from "@/features/profile/components/ActionPanelComponent";
 
 const formatFecha = (fecha: Date): string =>
     new Date(fecha).toLocaleDateString('es-CO', {
@@ -20,34 +22,6 @@ const formatFecha = (fecha: Date): string =>
 
 const getIniciales = (nombreCompleto: string): string =>
     nombreCompleto.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
-
-const Separador = () => (
-    <View className="w-full bg-white border-x border-gray-300 items-center justify-center h-[1px]">
-        <View style={{width: '80%', height: 1, backgroundColor: '#d1d5db'}}/>
-    </View>
-);
-
-interface FilaAccionProps {
-    icono: React.ReactNode;
-    label: string;
-    onPress?: () => void;
-    labelColor?: string;
-    className?: string;
-}
-
-const FilaAccion = ({icono, label, onPress, labelColor = '#000', className = ''}: FilaAccionProps) => (
-    <View className={`flex-row w-full h-20 bg-white items-center p-4 ${className}`}>
-        <View className="flex-row items-center flex-1">
-            {icono}
-            <Text className="ml-6 text-[16px] font-medium" style={{color: labelColor}}>
-                {label}
-            </Text>
-        </View>
-        <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
-            <ChevronRight color={'#000'}/>
-        </TouchableOpacity>
-    </View>
-);
 
 interface ProfileScreenProps {
     onLogout?: () => void;
@@ -123,7 +97,7 @@ export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
                             {acceso ? formatFecha(acceso.haacFechaInicio) : '-'}
                         </Text>
                     </View>
-                    <Separador/>
+                    <SeparatorComponent/>
                     <View
                         className="flex-col w-full h-20 bg-white rounded-b-xl items-center p-4 border-b border-x border-gray-300">
                         <View className="flex-row w-full">
@@ -136,19 +110,19 @@ export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
                     </View>
                 </View>
                 <View className="w-full mt-6">
-                    <FilaAccion
+                    <ActionPanelComponent
                         icono={<Phone/>}
                         label="Contactar recepción"
                         className="rounded-t-xl border-t border-x border-gray-300"
                     />
-                    <Separador/>
-                    <FilaAccion
+                    <SeparatorComponent/>
+                    <ActionPanelComponent
                         icono={<ReceiptText/>}
                         label="Ver factura"
                         className="border-x border-gray-300"
                     />
-                    <Separador/>
-                    <FilaAccion
+                    <SeparatorComponent/>
+                    <ActionPanelComponent
                         icono={<LogOut color="#dc2626"/>}
                         label="Cerrar sesión"
                         labelColor="#dc2626"

@@ -12,6 +12,8 @@ import {AlertComponent} from "@/shared/components/AlertComponent";
 import {AlertState} from "@/types/AlertState";
 import {ItemDetailSheetComponent} from "@/features/menu-details/components/ItemDetailSheetComponent";
 import {useCartStore} from "@/shared/store/cartStore";
+import {FloatingButtonComponent} from "@/shared/components/FloatingButtonComponent";
+import {ShopCartSheetComponent} from "@/shared/components/ShopCartSheetComponent";
 
 interface Props {
     submenuId: number;
@@ -25,18 +27,19 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
     const [notifications, setNotifications] = useState(3);
     const [cart, setCart] = useState<Record<string, number>>({});
     const [modalVisible, setModalVisible] = useState(false);
+    const [sheetVisible, setSheetVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState<MenuItem[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
     const [alert, setAlert] = useState<AlertState>({visible: false});
-    const {add, items: cartItems} = useCartStore();
+    const {add, items: cartItems, total, clear} = useCartStore();
 
     const loadData = async () => {
         try {
             const [items, tags] = await Promise.all([
-                getMenuItem({ mecaId: submenuId }),
-                getTags({ mecaId: submenuId, consultaPorCategoria: true }),
+                getMenuItem({mecaId: submenuId}),
+                getTags({mecaId: submenuId, consultaPorCategoria: true}),
             ]);
 
             setItems(items);
@@ -80,19 +83,32 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
         setModalVisible(true);
     };
 
-    const handleBottomSheetQuantityChange = useCallback((quantity: number) => {
-        setSelectedItem((prev) => {
-            if (prev) {
-                setCart(cartPrev => ({...cartPrev, [prev.meitId]: quantity}));
-                return {...prev, quantity};
-            }
-            return prev;
-        });
-    }, []);
-
     const handleSelectBack = () => {
         onBack();
     };
+
+    const handleCreateOrder = () => {
+        setAlert({
+            visible: true,
+            alertType: 'question',
+            title: 'Confirmar',
+            message: `Se creará un pedido a la habitación por un valor de $${total().toLocaleString('es-CO')}. ¿Desea continuar?`,
+            onAccept: () => {
+                setAlert({visible: false});
+                handleConfirmCreateOrder();
+            },
+            cancelText: 'Cancelar',
+            onCancel: () => {
+                setAlert({visible: false});
+            }
+        });
+    }
+
+    const handleConfirmCreateOrder = () => {
+        //lógica crear pedido
+        setSheetVisible(false);
+        clear();
+    }
 
     if (loading) {
         return (
@@ -146,6 +162,17 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
                 />
             </View>
             <AlertComponent {...alert}/>
+            <FloatingButtonComponent
+                onPress={() => setSheetVisible(true)}
+                bottom={20}
+                right={20}
+                color="#000000"
+            />
+            <ShopCartSheetComponent
+                visible={sheetVisible}
+                onClose={() => setSheetVisible(false)}
+                onCreateOrder={() => handleCreateOrder()}
+            />
         </SafeAreaView>
     );
 };
