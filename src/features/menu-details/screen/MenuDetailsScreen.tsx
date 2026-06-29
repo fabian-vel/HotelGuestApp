@@ -2,20 +2,15 @@ import React, {useCallback, useEffect, useState} from "react";
 import {ActivityIndicator, ScrollView, View} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ToolBarComponent from "@/shared/components/ToolBarComponent";
-import {RouteProp} from "@react-navigation/core";
-import {RootStackParamList} from "@/types/Navigation";
 import CardComponent from "@/features/menu-details/components/CardComponent";
 import {BottomSheetComponent} from "@/features/menu-details/components/BottomSheetComponent";
-import {StackNavigationProp} from "@react-navigation/stack";
-import {useNavigation} from "@react-navigation/native";
 import LabelCarouselComponent from "@/features/menu-details/components/LabelCarouselComponent";
 import {getMenuItem} from "@/features/menu-details/service/MenuItemService";
 import {getEtiquetas} from "@/features/menu-details/service/EtiquetaService";
 import {MenuItem} from "@/types/MenuItem";
 import {Etiqueta} from "@/types/Etiqueta";
-
-type MenuDetailRouteProp = RouteProp<RootStackParamList, 'MenuDetail'>;
-type MenuDetailNavigationProp = StackNavigationProp<RootStackParamList, 'MenuDetail'>;
+import {AlertComponent} from "@/shared/components/AlertComponent";
+import {AlertState} from "@/types/AlertState";
 
 interface Props {
     submenuId: number;
@@ -33,24 +28,35 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
     const [loading, setLoading] = useState(true);
     const [items, setItems] = useState<MenuItem[]>([]);
     const [etiquetas, setEtiquetas] = useState<Etiqueta[]>([]);
-    const navigation = useNavigation<MenuDetailNavigationProp>();
+    const [alert, setAlert] = useState<AlertState>({visible: false});
+
+    const loadData = async () => {
+        try {
+            const [items, etiquetas] = await Promise.all([
+                getMenuItem({ mecaId: submenuId }),
+                getEtiquetas({ mecaId: submenuId, consultaPorCategoria: true }),
+            ]);
+
+            setItems(items);
+            setEtiquetas(etiquetas);
+        } catch (error: any) {
+            setAlert({
+                visible: true,
+                alertType: 'error',
+                title: 'Error',
+                message: error?.message ?? 'Error inesperado',
+                onAccept: () => {
+                    setAlert({visible: false});
+                    handleSelectBack();
+                }
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [items, etiquetas] = await Promise.all([
-                    getMenuItem({mecaId: submenuId}),
-                    getEtiquetas({mecaId: submenuId, consultaPorCategoria: true}),
-                ]);
-                setItems(items);
-                setEtiquetas(etiquetas);
-            } catch (error) {
-                console.error('Error al cargar datos del menú', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
+        loadData();
     }, []);
 
     const handleIncrease = (dishId: number) => {
@@ -101,7 +107,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
     }
 
     return (
-        <SafeAreaView style={{flex: 1}} className="bg-stone-100">
+        <SafeAreaView style={{flex: 1, backgroundColor: '#fcf8f6'}}>
             <View style={{flex: 1}}>
                 <ToolBarComponent
                     searchValue={search}
@@ -144,6 +150,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
                     onQuantityChange={handleBottomSheetQuantityChange}
                 />
             </View>
+            <AlertComponent {...alert}/>
         </SafeAreaView>
     );
 };

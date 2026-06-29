@@ -15,10 +15,19 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-        if (error.response?.status === 401) {
+        const status = error.response?.status;
+        const data = error.response?.data;
+
+        if (status === 401) {
             await AsyncStorage.removeItem('token');
         }
-        throw error;
+
+        throw Object.assign(new Error(data?.message ?? 'Error de conexión'), {
+            status,
+            code: data?.code ?? 'NETWORK_ERROR',
+            message: data?.message ?? 'Error de conexión',
+            correlationId: data?.correlationId ?? null,
+        });
     }
 );
 

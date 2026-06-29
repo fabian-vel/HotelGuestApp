@@ -7,5 +7,5 @@ export interface LoginResponse {
 
 export const login = async (habitacion: string, codigo: string): Promise<LoginResponse> => {
     const response = await axiosInstance.post('/auth/login', { habitacion, codigo });
-    return response.data.data; // ApiResponse<TokenResponse>
+    return response.data.data;
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LoginForm from '../components/LoginForm';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +7,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/types/Navigation';
 import {login} from "@/features/auth/service/authService";
 import {useAuthStore} from "@/features/auth/store/authStore";
+import {AlertState} from "@/types/AlertState";
+import {AlertComponent} from "@/shared/components/AlertComponent";
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -14,6 +16,7 @@ export default function LoginScreen() {
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation<LoginNavigationProp>();
     const saveToken = useAuthStore((state) => state.saveToken);
+    const [alert, setAlert] = useState<AlertState>({visible: false});
 
     const handleLoginSubmit = async (habitacion: string, codigo: string) => {
         setLoading(true);
@@ -22,8 +25,15 @@ export default function LoginScreen() {
             await saveToken(response.token);
             navigation.replace('Main');
         } catch (error: any) {
-            const message = error.response?.data?.message ?? 'Error al iniciar sesión';
-            Alert.alert('Error', error?.message ?? 'Error al iniciar sesión');
+            setAlert({
+                visible: true,
+                alertType: 'error',
+                title: 'Error',
+                message: error?.message ?? 'Error inesperado',
+                onAccept: () => {
+                    setAlert({visible: false});
+                }
+            });
         } finally {
             setLoading(false);
         }
@@ -45,6 +55,7 @@ export default function LoginScreen() {
                     ¿Problemas con su código? Contacte a recepción.
                 </Text>
             </View>
+            <AlertComponent {...alert}/>
         </SafeAreaView>
     );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, Text} from "react-native";
+import {View, Text} from "react-native";
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import {Bookmark} from "lucide-react-native";
 

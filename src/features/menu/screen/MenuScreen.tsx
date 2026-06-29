@@ -6,6 +6,7 @@ import AccordionComponent from "@/features/menu/components/AccordionComponent";
 import {getCategoryImage} from "@/shared/util/imageMap";
 import {useCategoriaStore} from "@/shared/store/categoriaStore";
 import {Submenu} from "@/types/Submenu";
+import {AlertComponent} from "@/shared/components/AlertComponent";
 
 interface MenuScreenProps {
     categoriaId?: number;
@@ -16,7 +17,7 @@ export default function MenuScreen({categoriaId, onSelectSubmenu}: Readonly<Menu
 
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(3);
-    const {categorias, loading, fetchCategorias} = useCategoriaStore();
+    const {categorias, loading, fetchCategorias, error} = useCategoriaStore();
 
     useEffect(() => {
         fetchCategorias();
@@ -35,7 +36,7 @@ export default function MenuScreen({categoriaId, onSelectSubmenu}: Readonly<Menu
     }
 
     return (
-        <SafeAreaView style={{flex: 1}} edges={['top', 'left', 'right']}>
+        <SafeAreaView style={{flex: 1, backgroundColor: '#fcf8f6'}} edges={['top', 'left', 'right']}>
             <View style={{flex: 1}}>
                 <ToolBarComponent
                     searchValue={search}
@@ -61,6 +62,13 @@ export default function MenuScreen({categoriaId, onSelectSubmenu}: Readonly<Menu
                     ))}
                 </ScrollView>
             </View>
+            <AlertComponent
+                visible={!!error}
+                alertType="error"
+                title="Error"
+                message={error ?? 'Error inesperado'}
+                onAccept={() => useCategoriaStore.setState({error: null})}
+            />
         </SafeAreaView>
     );
 }

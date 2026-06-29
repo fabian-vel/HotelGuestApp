@@ -6,6 +6,8 @@ import {getTokenPayload} from "@/shared/util/jwtUtil";
 import {getFechaAcceso} from "@/features/profile/service/AccessDateService";
 import {HabitacionAcceso} from "@/types/HabitacionAcceso";
 import {useAuthStore} from "@/features/auth/store/authStore";
+import {AlertState} from "@/types/AlertState";
+import {AlertComponent} from "@/shared/components/AlertComponent";
 
 const formatFecha = (fecha: Date): string =>
     new Date(fecha).toLocaleDateString('es-CO', {
@@ -58,30 +60,40 @@ export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
     const [iniciales, setIniciales] = useState<string>('');
     const [loading, setLoading] = useState(true);
     const clearToken = useAuthStore((state) => state.clearToken);
+    const [alert, setAlert] = useState<AlertState>({visible: false});
 
     const handleLogout = useCallback(async () => {
         await clearToken();
         onLogout?.();
     }, [clearToken, onLogout]);
 
-    useEffect(() => {
-        const cargarPerfil = async () => {
-            try {
-                const payload = await getTokenPayload();
-                if (payload) {
-                    setHabitacion(payload.sub);
-                    setNombre(payload.clienteNombre);
-                    setIniciales(getIniciales(payload.clienteNombre));
-                    const data = await getFechaAcceso({haacId: payload.accesoId});
-                    setAcceso(data);
-                }
-            } catch (error) {
-                console.error('Error al cargar perfil', error);
-            } finally {
-                setLoading(false);
+    const loadData = async () => {
+        try {
+            const payload = await getTokenPayload();
+            if (payload) {
+                setHabitacion(payload.sub);
+                setNombre(payload.clienteNombre);
+                setIniciales(getIniciales(payload.clienteNombre));
+                const data = await getFechaAcceso({haacId: payload.accesoId});
+                setAcceso(data);
             }
-        };
-        cargarPerfil();
+        } catch (error: any) {
+            setAlert({
+                visible: true,
+                alertType: 'error',
+                title: 'Error',
+                message: error?.message ?? 'Error inesperado',
+                onAccept: () => {
+                    setAlert({visible: false});
+                }
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        loadData();
     }, []);
 
     if (loading) {
@@ -101,7 +113,8 @@ export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
                 <Text className="mt-2 text-xl font-medium">{nombre}</Text>
                 <Text className="text-xl font-medium">Habitación {habitacion}</Text>
                 <View className="w-full mt-6">
-                    <View className="flex-col w-full h-20 bg-white rounded-t-xl items-center p-4 border-t border-x border-gray-300">
+                    <View
+                        className="flex-col w-full h-20 bg-white rounded-t-xl items-center p-4 border-t border-x border-gray-300">
                         <View className="flex-row w-full">
                             <CalendarArrowUp/>
                             <Text className="text-[16px] ml-2">Check-in</Text>
@@ -111,7 +124,8 @@ export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
                         </Text>
                     </View>
                     <Separador/>
-                    <View className="flex-col w-full h-20 bg-white rounded-b-xl items-center p-4 border-b border-x border-gray-300">
+                    <View
+                        className="flex-col w-full h-20 bg-white rounded-b-xl items-center p-4 border-b border-x border-gray-300">
                         <View className="flex-row w-full">
                             <CalendarArrowDown/>
                             <Text className="text-[16px] ml-2">Check-out</Text>
@@ -143,6 +157,7 @@ export function ProfileScreen({onLogout}: Readonly<ProfileScreenProps>) {
                     />
                 </View>
             </View>
+            <AlertComponent {...alert}/>
         </SafeAreaView>
     );
 }
