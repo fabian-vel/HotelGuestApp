@@ -2,11 +2,12 @@ import React from "react";
 import {BottomSheetComponent} from "@/shared/components/BottomSheetComponent";
 import {Dimensions, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import {useCartStore} from "@/shared/store/cartStore";
+import {OrderRequest} from "@/types/OrderRequest";
 
 interface CartSheetComponentProps {
     visible: boolean;
     onClose: () => void;
-    onCreateOrder?: () => void;
+    onCreateOrder: (order: OrderRequest) => void;
 }
 
 export function ShopCartSheetComponent({
@@ -15,7 +16,7 @@ export function ShopCartSheetComponent({
                                            onCreateOrder,
                                        }: Readonly<CartSheetComponentProps>) {
     const {height} = Dimensions.get('window');
-    const {items, total, remove} = useCartStore();
+    const {items, total} = useCartStore();
 
     const itemsList = Object.values(items);
 
@@ -30,7 +31,14 @@ export function ShopCartSheetComponent({
         2: 'Bebidas',
     };
 
-
+    const buildOrderRequest = (): OrderRequest => ({
+        observacion: '',
+        items: Object.values(items).map(cartItem => ({
+            meitId: cartItem.meitId,
+            cantidad: cartItem.cantidad,
+            observacion: '',
+        })),
+    });
 
     return (
         <BottomSheetComponent
@@ -93,7 +101,7 @@ export function ShopCartSheetComponent({
 
                     <TouchableOpacity
                         className="w-full rounded-xl bg-black p-4 items-center justify-center"
-                        onPress={onCreateOrder}
+                        onPress={() => onCreateOrder(buildOrderRequest())}
                     >
                         <Text className="font-medium text-center text-amber-50">
                             Realizar pedido

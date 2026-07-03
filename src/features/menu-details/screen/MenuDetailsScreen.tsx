@@ -14,6 +14,8 @@ import {ItemDetailSheetComponent} from "@/features/menu-details/components/ItemD
 import {useCartStore} from "@/shared/store/cartStore";
 import {FloatingButtonComponent} from "@/shared/components/FloatingButtonComponent";
 import {ShopCartSheetComponent} from "@/shared/components/ShopCartSheetComponent";
+import {OrderRequest} from "@/types/OrderRequest";
+import {createOrder} from "@/features/menu-details/service/PedidoService";
 
 interface Props {
     submenuId: number;
@@ -87,7 +89,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
         onBack();
     };
 
-    const handleCreateOrder = () => {
+    const handleCreateOrder = (order: OrderRequest) => {
         setAlert({
             visible: true,
             alertType: 'question',
@@ -95,7 +97,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
             message: `Se creará un pedido a la habitación por un valor de $${total().toLocaleString('es-CO')}. ¿Desea continuar?`,
             onAccept: () => {
                 setAlert({visible: false});
-                handleConfirmCreateOrder();
+                handleConfirmCreateOrder(order);
             },
             cancelText: 'Cancelar',
             onCancel: () => {
@@ -104,8 +106,36 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
         });
     }
 
-    const handleConfirmCreateOrder = () => {
-        //lógica crear pedido
+    const setOrder = async (body: OrderRequest) => {
+        try {
+            const message = await createOrder(body);
+            setAlert({
+                visible: true,
+                alertType: 'success',
+                title: 'Confirmación',
+                message: message,
+                onAccept: () => {
+                    setAlert({visible: false});
+                }
+            });
+        } catch (error: any) {
+            setAlert({
+                visible: true,
+                alertType: 'error',
+                title: 'Error',
+                message: error?.message ?? 'Error inesperado',
+                onAccept: () => {
+                    setAlert({visible: false});
+                    handleSelectBack();
+                }
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleConfirmCreateOrder = (order: OrderRequest) => {
+        setOrder(order);
         setSheetVisible(false);
         clear();
     }
@@ -171,7 +201,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
             <ShopCartSheetComponent
                 visible={sheetVisible}
                 onClose={() => setSheetVisible(false)}
-                onCreateOrder={() => handleCreateOrder()}
+                onCreateOrder={handleCreateOrder}
             />
         </SafeAreaView>
     );
