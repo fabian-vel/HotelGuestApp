@@ -9,11 +9,10 @@ import {Submenu} from "@/types/Submenu";
 import {AlertComponent} from "@/shared/components/AlertComponent";
 
 interface MenuScreenProps {
-    categoryId?: number;
     onSelectSubmenu: (submenu: Submenu) => void;
 }
 
-export default function MenuScreen({categoryId, onSelectSubmenu}: Readonly<MenuScreenProps>) {
+export default function MenuScreen({onSelectSubmenu}: Readonly<MenuScreenProps>) {
 
     const [search, setSearch] = useState('');
     const [notifications, setNotifications] = useState(3);
@@ -22,10 +21,6 @@ export default function MenuScreen({categoryId, onSelectSubmenu}: Readonly<MenuS
     useEffect(() => {
         fetchCategories();
     }, []);
-
-    const filteredCategories = categoryId
-        ? categories.filter(c => c.mecaId === categoryId)
-        : categories;
 
     if (loading) {
         return (
@@ -47,7 +42,7 @@ export default function MenuScreen({categoryId, onSelectSubmenu}: Readonly<MenuS
                     title={"Menú"}
                 />
                 <ScrollView style={{flex: 1}}>
-                    {filteredCategories.map((categoria) => (
+                    {categories.map((categoria) => (
                         <AccordionComponent
                             key={categoria.mecaId}
                             title={categoria.mecaNombre}

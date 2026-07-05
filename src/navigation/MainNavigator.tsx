@@ -19,20 +19,12 @@ interface Submenu {
 
 export function MainNavigator() {
     const [activeTab, setActiveTab] = useState<BottomBarTab>('Inicio');
-    const [categoriaId, setCategoriaId] = useState<number | undefined>(undefined);
     const [submenu, setSubmenu] = useState<Submenu | null>(null);
     const navigation = useNavigation<MainNavigationProp>();
 
     const handleTabPress = (tab: BottomBarTab) => {
-        if (tab === 'Menu') setCategoriaId(undefined);
-        setSubmenu(null); // ← cierra MenuDetail al cambiar de tab
-        setActiveTab(tab);
-    };
-
-    const handleNavigateMenu = (id?: number) => {
-        setCategoriaId(id);
         setSubmenu(null);
-        setActiveTab('Menu');
+        setActiveTab(tab);
     };
 
     const handleLogout = () => {
@@ -50,13 +42,8 @@ export function MainNavigator() {
             );
         }
         switch (activeTab) {
-            case 'Inicio':  return <HomeScreen onNavigateMenu={handleNavigateMenu}/>;
-            case 'Menu': return (
-                <MenuScreen
-                    categoryId={categoriaId}
-                    onSelectSubmenu={setSubmenu}
-                />
-            );
+            case 'Inicio':  return <HomeScreen/>;
+            case 'Menu':    return <MenuScreen onSelectSubmenu={setSubmenu}/>;
             case 'Pedidos': return <OrderScreen/>;
             case 'Perfil':  return <ProfileScreen onLogout={handleLogout}/>;
         }

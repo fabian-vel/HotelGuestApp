@@ -6,7 +6,7 @@ import {Bookmark} from "lucide-react-native";
 export function SpecialDishCardComponent() {
     return (
         <View
-            className="rounded-2xl w-full h-40 flex-row p-4"
+            className="rounded-2xl w-full h-48 flex-row p-4"
             style={{backgroundColor: '#14532d'}}
         >
             <View style={{position: 'absolute', top: -4, right: 5, zIndex: 10}}>
@@ -28,10 +28,10 @@ export function SpecialDishCardComponent() {
             </View>
             <View
                 style={{flex: 1, overflow: 'hidden'}}
-                className="items-center justify-end"
+                className="items-end justify-end"
             >
                 <ImageComponent
-                    style={{width: 110, height: 110, borderRadius: 55}}
+                    style={{width: 108, height: 108, borderRadius: 54}}
                 />
             </View>
         </View>

@@ -2,27 +2,20 @@ import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity, ActivityIndicator} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SpecialDishCardComponent} from "@/features/home/components/SpecialDishCardComponent";
-import {Wine, HandPlatter, ChevronRight} from "lucide-react-native";
-import {useCategoriesStore} from "@/shared/store/categoryStore";
+import {ChevronRight, ChevronLeft} from "lucide-react-native";
 import {AlertComponent} from "@/shared/components/AlertComponent";
 import {useOrderStore} from "@/shared/store/orderStore";
 import {getOrderStatusStyle} from "@/shared/util/orderStatusUtil";
 
-interface HomeScreenProps {
-    onNavigateMenu?: (categoriaId?: number) => void;
-}
-
-export function HomeScreen({onNavigateMenu}: Readonly<HomeScreenProps>) {
+export function HomeScreen() {
     const ESTADOS_ACTIVOS = new Set([1, 2]); // 1: Pendiente, 2: En preparación
-    const {categories, loading, fetchCategories, error} = useCategoriesStore();
     const {orders, loadingOrder, fetchOrders, errorOrder} = useOrderStore();
 
     useEffect(() => {
-        fetchCategories();
         fetchOrders();
     }, []);
 
-    if (loading || loadingOrder) {
+    if (loadingOrder) {
         return (
             <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <ActivityIndicator size="large"/>
@@ -30,10 +23,8 @@ export function HomeScreen({onNavigateMenu}: Readonly<HomeScreenProps>) {
         );
     }
 
-    const activeError = error ?? errorOrder;
     const clearError = () => {
-        if (error) useCategoriesStore.setState({error: null});
-        if (errorOrder) useOrderStore.setState({errorOrder: null});
+        useOrderStore.setState({errorOrder: null});
     };
 
     const currentOrder = orders
@@ -53,26 +44,26 @@ export function HomeScreen({onNavigateMenu}: Readonly<HomeScreenProps>) {
                       style={{marginBottom: 24, fontSize: 16, lineHeight: 18}}>
                     Habitación 302
                 </Text>
-                <SpecialDishCardComponent/>
-                <Text className="mt-6"
-                      style={{marginBottom: 20, fontSize: 16, lineHeight: 18, color: '#75624a'}}>
-                    Explorar
-                </Text>
-                <View className="flex-row items-center justify-evenly">
-                    {categories.map(category => (
-                        <TouchableOpacity
-                            key={category.mecaId}
-                            className="flex-col items-center justify-center bg-white rounded-lg p-4 w-32 h-32"
-                            onPress={() => onNavigateMenu?.(category.mecaId)}
-                        >
-                            {category.mecaId === 1
-                                ? <HandPlatter size={35} color="#75624a"/>
-                                : <Wine size={35} color="#75624a"/>
-                            }
-                            <Text className="mt-4 font-bold">{category.mecaNombre}</Text>
-                            <Text className="mt-1 text-[#75624a]">Ver menú</Text>
-                        </TouchableOpacity>
-                    ))}
+                <View style={{position: 'relative', paddingHorizontal: 16}}>
+                    <TouchableOpacity
+                        style={{
+                            width: 32, height: 32, position: 'absolute', zIndex: 1, left: 0,
+                            top: '50%', transform: [{translateY: -16}]
+                        }}
+                        className="rounded-full bg-white justify-center items-center border border-gray-200"
+                    >
+                        <ChevronLeft color='#000000' size={20}/>
+                    </TouchableOpacity>
+                    <SpecialDishCardComponent/>
+                    <TouchableOpacity
+                        style={{
+                            width: 32, height: 32, position: 'absolute', zIndex: 1, right: 0,
+                            top: '50%', transform: [{translateY: -16}]
+                        }}
+                        className="rounded-full bg-white justify-center items-center border border-gray-200"
+                    >
+                        <ChevronRight color='#000000' size={20}/>
+                    </TouchableOpacity>
                 </View>
 
                 {currentOrder !== null && (
@@ -96,10 +87,10 @@ export function HomeScreen({onNavigateMenu}: Readonly<HomeScreenProps>) {
                 )}
             </View>
             <AlertComponent
-                visible={!!activeError}
+                visible={!!errorOrder}
                 alertType="error"
                 title="Error"
-                message={activeError ?? 'Error inesperado'}
+                message={errorOrder ?? 'Error inesperado'}
                 onAccept={clearError}
             />
         </SafeAreaView>

@@ -69,9 +69,9 @@ export default function AccordionComponent({
                         const isLastItem = index === list.length - 1;
                         return (
                             <TouchableOpacity
-                                key={index}
+                                key={item.id}
                                 onPress={() =>
-                                    onSelectSubmenu?.({  // ← objeto Submenu
+                                    onSelectSubmenu?.({
                                         submenuId: item.id,
                                         submenuName: item.label ?? ''
                                     })
