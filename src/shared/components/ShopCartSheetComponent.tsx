@@ -86,8 +86,6 @@ export function ShopCartSheetComponent({
                         </View>
                     ))}
                 </ScrollView>
-
-                {/* Total y botón */}
                 <View
                     style={{borderTopWidth: 1, borderTopColor: '#e7e5e4'}}
                     className="pt-4 mt-2"

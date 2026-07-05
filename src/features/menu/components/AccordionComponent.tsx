@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+ import React, {useState, useRef, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Animated, ImageSourcePropType} from 'react-native';
 import {ChevronDown} from "lucide-react-native";
 import {ImageComponent} from "@/shared/components/ImageComponent";

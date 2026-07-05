@@ -2,14 +2,14 @@ import { create } from 'zustand';
 import { MenuCategory } from '@/types/MenuCategory';
 import { getCategory } from '@/features/menu/service/MenuService';
 
-interface CategoriaState {
+interface CategoryState {
     categories: MenuCategory[];
     loading: boolean;
     error: string | null;
     fetchCategories: () => Promise<void>;
 }
 
-export const useCategoriesStore = create<CategoriaState>((set, get) => ({
+export const useCategoriesStore = create<CategoryState>((set, get) => ({
     categories: [],
     loading: false,
     error: null,
