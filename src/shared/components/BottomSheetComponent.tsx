@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from "react";
 import {Animated, Modal, TouchableOpacity, View} from "react-native";
-import {ChevronDown} from "lucide-react-native";
+import {ChevronDown, CircleX} from "lucide-react-native";
+import {SeparatorComponent} from "@/shared/components/SeparatorComponent";
 
 interface BottomSheetComponentProps {
     visible: boolean;
@@ -53,6 +54,7 @@ export function BottomSheetComponent({
                                 <ChevronDown/>
                             </TouchableOpacity>
                         </View>
+                        <SeparatorComponent style={{marginBottom: 10}}/>
                         {children}
                     </View>
                 </View>

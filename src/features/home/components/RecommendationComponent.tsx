@@ -3,11 +3,11 @@ import {View, Text} from "react-native";
 import {ImageComponent} from "@/shared/components/ImageComponent";
 import {Bookmark} from "lucide-react-native";
 
-export function SpecialDishCardComponent() {
+export function RecommendedItemCardComponent() {
     return (
         <View
-            className="rounded-2xl w-full h-48 flex-row p-4"
-            style={{backgroundColor: '#14532d'}}
+            className="rounded-2xl w-full flex-row p-4"
+            style={{backgroundColor: '#14532d', height: 160}}
         >
             <View style={{position: 'absolute', top: -4, right: 5, zIndex: 10}}>
                 <Bookmark color="yellow" fill="yellow" size={40}/>

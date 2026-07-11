@@ -1,21 +1,51 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, ActivityIndicator} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {SpecialDishCardComponent} from "@/features/home/components/SpecialDishCardComponent";
-import {ChevronRight, ChevronLeft} from "lucide-react-native";
+import {RecommendedItemCardComponent} from "@/features/home/components/RecommendationComponent";
+import {ChevronRight, ChevronLeft, ArrowRight} from "lucide-react-native";
 import {AlertComponent} from "@/shared/components/AlertComponent";
 import {useOrderStore} from "@/shared/store/orderStore";
 import {getOrderStatusStyle} from "@/shared/util/orderStatusUtil";
+import {SpecialItemCardComponent} from "@/features/home/components/SpecialItemCardComponent";
+import {SpecialItem} from "@/types/SpecialItem";
+import {getSpecialItems} from "@/features/home/service/SpecialItemsService";
+import {AlertState} from "@/types/AlertState";
+import {CarouselComponent} from "@/features/home/components/CarouselComponent";
 
 export function HomeScreen() {
     const ESTADOS_ACTIVOS = new Set([1, 2]); // 1: Pendiente, 2: En preparación
     const {orders, loadingOrder, fetchOrders, errorOrder} = useOrderStore();
+    const [mostRequestedItems, setMostRequestedItems] = useState<SpecialItem[]>([]);
+    const [mostRecentItems, setMostRecentItems] = useState<SpecialItem[]>([]);
+    const [alert, setAlert] = useState<AlertState>({visible: false});
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchOrders();
+        loadSpecialItems();
     }, []);
 
-    if (loadingOrder) {
+    const loadSpecialItems = async () => {
+        try {
+            const specialItems = await getSpecialItems();
+            setMostRequestedItems(specialItems?.itemsMasPedidos);
+            setMostRecentItems(specialItems?.itemsMasRecientes);
+        } catch (error: any) {
+            setAlert({
+                visible: true,
+                alertType: 'error',
+                title: 'Error',
+                message: error?.message ?? 'Error inesperado',
+                onAccept: () => {
+                    setAlert({visible: false});
+                }
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    if (loadingOrder || loading) {
         return (
             <SafeAreaView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <ActivityIndicator size="large"/>
@@ -54,7 +84,7 @@ export function HomeScreen() {
                     >
                         <ChevronLeft color='#000000' size={20}/>
                     </TouchableOpacity>
-                    <SpecialDishCardComponent/>
+                    <RecommendedItemCardComponent/>
                     <TouchableOpacity
                         style={{
                             width: 32, height: 32, position: 'absolute', zIndex: 1, right: 0,
@@ -66,21 +96,50 @@ export function HomeScreen() {
                     </TouchableOpacity>
                 </View>
 
+                <Text className="mt-4"
+                      style={{marginBottom: 16, fontSize: 16, lineHeight: 18, color: '#75624a'}}>
+                    Más pedidos
+                </Text>
+                <CarouselComponent
+                    data={mostRequestedItems}
+                    keyExtractor={(item: SpecialItem) => item.meitId.toString()}
+                    renderItem={(item) => (
+                        <SpecialItemCardComponent
+                            item={item}
+                        />
+                    )}
+                />
+
+                <Text className="mt-4"
+                      style={{marginBottom: 16, fontSize: 16, lineHeight: 18, color: '#75624a'}}>
+                    Nuevos en el menú
+                </Text>
+                <CarouselComponent
+                    data={mostRecentItems}
+                    keyExtractor={(item: SpecialItem) => item.meitId.toString()}
+                    renderItem={(item) => (
+                        <SpecialItemCardComponent
+                            item={item}
+                        />
+                    )}
+                />
+
                 {currentOrder !== null && (
                     <>
-                        <Text className="mt-6"
-                              style={{marginBottom: 20, fontSize: 16, lineHeight: 18, color: '#75624a'}}>
+                        <Text className="mt-4"
+                              style={{marginBottom: 16, fontSize: 16, lineHeight: 18, color: '#75624a'}}>
                             Tu pedido actual
                         </Text>
 
                         <View
-                            className="flex-row items-center justify-between bg-white h-[70px] w-full pl-4 pr-4 rounded-lg">
+                            className="flex-row items-center justify-between bg-white h-[50px] w-full pl-4 pr-4 rounded-lg"
+                        style={{elevation: 2}}>
                             <Text>{currentOrder?.detallePedidoList.length} productos</Text>
                             <Text style={{backgroundColor, color}} className="p-2 rounded-lg w-36 text-center">
                                 {currentOrder?.espeNombre}
                             </Text>
                             <TouchableOpacity>
-                                <ChevronRight/>
+                                <ArrowRight/>
                             </TouchableOpacity>
                         </View>
                     </>

@@ -1,8 +1,8 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ActivityIndicator, ScrollView, View} from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ToolBarComponent from "@/shared/components/ToolBarComponent";
-import CardComponent from "@/features/menu-details/components/CardComponent";
+import ItemCardComponent from "@/features/menu-details/components/ItemCardComponent";
 import LabelCarouselComponent from "@/features/menu-details/components/LabelCarouselComponent";
 import {getMenuItem} from "@/features/menu-details/service/MenuItemService";
 import {getTags} from "@/features/menu-details/service/EtiquetaService";
@@ -174,7 +174,7 @@ export const MenuDetailsScreen = ({submenuId, submenuName, onBack}: Props) => {
                 >
                     {itemsFiltrados.map((item: MenuItem) => (
                         <View key={item.meitId} className="mb-4">
-                            <CardComponent
+                            <ItemCardComponent
                                 item={item}
                                 hideDescription={false}
                                 quantity={cartItems[item.meitId]?.cantidad ?? 0}

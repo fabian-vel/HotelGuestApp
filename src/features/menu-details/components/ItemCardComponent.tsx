@@ -7,15 +7,13 @@ import {MenuItem} from "@/types/MenuItem";
 interface CardComponentProps {
     item: MenuItem;
     hideDescription?: boolean;
-
     quantity: number;
     onIncrease: () => void;
     onDecrease: () => void;
-
     onPress: () => void;
 }
 
-export default function CardComponent({
+export default function ItemCardComponent({
                                           item,
                                           hideDescription = false,
                                           quantity,
@@ -27,7 +25,8 @@ export default function CardComponent({
     const {meitNombre, meitImagenUrl, meitDescripcion, meitPrecio} = item;
 
     return (
-        <View className="flex-row bg-white rounded-xl border border-gray-300 w-full max-w-sm overflow-hidden h-32">
+        <View className="flex-row bg-white rounded-xl w-full overflow-hidden h-32"
+        style={{elevation: 2}}>
             <TouchableOpacity className="flex-1" onPress={onPress} activeOpacity={0.8}>
                 <View className="flex-1 p-3 justify-between m-1">
                     <View>

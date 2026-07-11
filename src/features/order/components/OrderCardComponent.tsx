@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from "react-native";
-import {ChevronRight} from "lucide-react-native";
+import {ArrowRight, ChevronRight} from "lucide-react-native";
 import {useOrderStore} from "@/shared/store/orderStore";
 import {getOrderStatusStyle} from "@/shared/util/orderStatusUtil";
 import {getFormatFecha} from "@/shared/util/formatFechaUtil";
@@ -26,8 +26,8 @@ export function OrderCardComponent({onPress}: Readonly<OrderCardComponentProps>)
 
                 return (
                     <View key={order.pediId}
-                          className="flex-col w-full h-36 bg-white rounded-lg p-6
-                          justify-between mb-3 border border-gray-300">
+                          className="flex-col w-full h-36 bg-white rounded-lg p-6 justify-between mb-3"
+                          style={{elevation: 2}}>
                         <View className="w-full flex-row justify-end">
                             <Text style={{backgroundColor, color}}
                                   className="p-2 rounded-xl w-36 text-center">
@@ -48,7 +48,7 @@ export function OrderCardComponent({onPress}: Readonly<OrderCardComponentProps>)
                                 <TouchableOpacity
                                     onPress={() => onPress?.(order)}
                                 >
-                                    <ChevronRight color={'#000'}/>
+                                    <ArrowRight color={'#000'}/>
                                 </TouchableOpacity>
                             </View>
                         </View>
