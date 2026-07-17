@@ -1,6 +1,7 @@
 export interface SpecialItems {
     itemsMasPedidos: SpecialItem[],
-    itemsMasRecientes: SpecialItem[]
+    itemsMasRecientes: SpecialItem[],
+    itemsRecomendadosChef: SpecialItem[]
 }
 
 export interface SpecialItem {
